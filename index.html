@@ -1,17 +1,3422 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>MegaDepth-X</title>
-</head>
-<body>
-  <h1>MegaDepth-X</h1>
-  <p>Long-Tail Internet Photo Reconstruction Dataset</p>
-  <p>
-    Dataset link:
-    <a href="https://huggingface.co/datasets/y-u-a-n-l-i/MegaDepth-X">
-      https://huggingface.co/datasets/y-u-a-n-l-i/MegaDepth-X
-    </a>
-  </p>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Long-Tail Internet Photo Reconstruction</title>
+    <link rel="icon" type="image/svg+xml" href="material/church-favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-page: #ffffff;
+        --text-main: #2f241a;
+        --text-soft: #3f3f3f;
+        --panel-bg: #ffffff;
+        --panel-tint: #fff4e8;
+        --line: #ebebeb;
+        --line-strong: #dcdcdc;
+        --btn-bg: #505050;
+        --btn-hover: #3a3a3a;
+        --btn-text: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg-page);
+        color: var(--text-main);
+        font-family:
+          "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .paper {
+        width: min(1180px, calc(100% - 28px));
+        margin: 28px auto 60px;
+        padding: clamp(18px, 2.3vw, 30px);
+        border: none;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: none;
+        text-align: center;
+        animation: rise 420ms ease-out;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family:
+          "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .title {
+        font-size: clamp(2rem, 3.2vw, 2.95rem);
+        line-height: 1.16;
+        letter-spacing: -0.01em;
+      }
+
+      .authors {
+        margin-top: 14px;
+        font-size: clamp(1rem, 1.3vw, 1.24rem);
+        font-weight: 600;
+        letter-spacing: 0.002em;
+      }
+
+      .authors a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .authors a:hover {
+        text-decoration: underline;
+      }
+
+      .affils {
+        margin-top: 7px;
+        font-size: clamp(0.97rem, 1.2vw, 1.14rem);
+        color: var(--text-soft);
+      }
+
+      .corr-note {
+        margin-top: 4px;
+        font-size: clamp(0.88rem, 1vw, 0.98rem);
+        color: var(--text-soft);
+      }
+
+      .venue {
+        margin-top: 8px;
+        font-size: clamp(1.2rem, 1.9vw, 1.58rem);
+        font-weight: 600;
+        color: #3c3c3c;
+      }
+
+      .btn-row {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .link-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 112px;
+        border: none;
+        border-radius: 20px;
+        padding: 9px 16px;
+        font-size: 1.01rem;
+        font-weight: 600;
+        color: var(--btn-text);
+        text-decoration: none;
+        background: var(--btn-bg);
+        box-shadow: 0 6px 14px rgba(139, 139, 139, 0.25);
+        transition:
+          transform 160ms ease,
+          background 160ms ease,
+          box-shadow 160ms ease;
+      }
+
+      .link-btn:hover {
+        background: var(--btn-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(143, 143, 143, 0.3);
+      }
+
+      .link-btn.is-empty-link {
+        background: #c9c9c9;
+        color: #f8f8f8;
+        box-shadow: none;
+        cursor: default;
+      }
+
+      .link-btn.is-empty-link:hover {
+        background: #c9c9c9;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-icon {
+        display: inline-flex;
+        width: 16px;
+        height: 16px;
+      }
+
+      .btn-icon .ai {
+        display: inline-block;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .btn-icon .ai.ai-arxiv {
+        width: 16px;
+        height: 16px;
+        font-size: 0;
+        background-color: currentColor;
+        -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTMuODQyMyAwYTEuMDAzNyAxLjAwMzcgMCAwIDAtLjkyMi42MDc4Yy0uMTUzNi4zNjg3LS4wNDM4LjYyNzUuMjkzOCAxLjExMTNsNi45MTg1IDguMzU5Ny0xLjAyMjMgMS4xMDU4YTEuMDM5MyAxLjAzOTMgMCAwIDAgLjAwMyAxLjQyMjlsMS4yMjkyIDEuMzEzNS01LjQzOTEgNi40NDQ0Yy0uMjgwMy4yOTktLjQ1MzguODIzLS4yOTcxIDEuMTk4NmExLjAyNTMgMS4wMjUzIDAgMCAwIC45NTg1LjYzNS45MTMzLjkxMzMgMCAwIDAgLjY4OTEtLjM0MDVsNS43ODMtNi4xMjYgNy40OTAyIDguMDA1MWEuODUyNy44NTI3IDAgMCAwIC42ODM1LjI1OTcuOTU3NS45NTc1IDAgMCAwIC44Nzc3LS42MTM4Yy4xNTc3LS4zNzctLjAxNy0uNzUwMi0uMzA2LTEuMTQwN2wtNy4wNTE4LTguMzQxOCAxLjA2MzItMS4xM2EuOTYyNi45NjI2IDAgMCAwIC4wMDg5LTEuMzE2NUw0LjYzMzYuNDYzOXMtLjM3MzMtLjQ1MzUtLjc2OC0uNDYzem0wIC4yNzJoLjAxNjZjLjIxNzkuMDA1Mi40ODc0LjI3MTUuNTY0NC4zNjM5bC4wMDUuMDA2LjAwNTIuMDA1NSAxMC4xNjkgMTAuOTkwNWEuNjkxNS42OTE1IDAgMCAxLS4wMDcyLjk0NWwtMS4wNjY2IDEuMTMzLTEuNDk4Mi0xLjc3MjQtOC41OTk0LTEwLjM5Yy0uMzI4Ni0uNDcyLS4zNTItLjYxODMtLjI1OTItLjg0MWEuNzMwNy43MzA3IDAgMCAxIC42NzA0LS40NDAxWm0xNC4zNDEgMS41NzAxYS44NzcuODc3IDAgMCAwLS42NTU0LjI0MThsLTUuNjk2MiA2LjE1ODQgMS42OTQ0IDEuODMxOSA1LjMwODktNi41MTM4Yy4zMjUxLS40MzM1LjQ3OS0uNjYwMy4zMjQ3LTEuMDI5MmExLjEyMDUgMS4xMjA1IDAgMCAwLS45NzYzLS42ODl6bS03LjY1NTcgMTIuMjgyMyAxLjMxODYgMS40MTM1LTUuNzg2NCA2LjEyOTVhLjY0OTQuNjQ5NCAwIDAgMS0uNDk1OS4yNi43NTE2Ljc1MTYgMCAwIDEtLjcwNi0uNDY2OWMtLjExMTktLjI2ODIuMDM1OS0uNjg2NC4yNDQyLS45MDgzbC4wMDUxLS4wMDU1LjAwNDctLjAwNTV6Ii8+PC9zdmc+Cg==");
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: contain;
+        mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTMuODQyMyAwYTEuMDAzNyAxLjAwMzcgMCAwIDAtLjkyMi42MDc4Yy0uMTUzNi4zNjg3LS4wNDM4LjYyNzUuMjkzOCAxLjExMTNsNi45MTg1IDguMzU5Ny0xLjAyMjMgMS4xMDU4YTEuMDM5MyAxLjAzOTMgMCAwIDAgLjAwMyAxLjQyMjlsMS4yMjkyIDEuMzEzNS01LjQzOTEgNi40NDQ0Yy0uMjgwMy4yOTktLjQ1MzguODIzLS4yOTcxIDEuMTk4NmExLjAyNTMgMS4wMjUzIDAgMCAwIC45NTg1LjYzNS45MTMzLjkxMzMgMCAwIDAgLjY4OTEtLjM0MDVsNS43ODMtNi4xMjYgNy40OTAyIDguMDA1MWEuODUyNy44NTI3IDAgMCAwIC42ODM1LjI1OTcuOTU3NS45NTc1IDAgMCAwIC44Nzc3LS42MTM4Yy4xNTc3LS4zNzctLjAxNy0uNzUwMi0uMzA2LTEuMTQwN2wtNy4wNTE4LTguMzQxOCAxLjA2MzItMS4xM2EuOTYyNi45NjI2IDAgMCAwIC4wMDg5LTEuMzE2NUw0LjYzMzYuNDYzOXMtLjM3MzMtLjQ1MzUtLjc2OC0uNDYzem0wIC4yNzJoLjAxNjZjLjIxNzkuMDA1Mi40ODc0LjI3MTUuNTY0NC4zNjM5bC4wMDUuMDA2LjAwNTIuMDA1NSAxMC4xNjkgMTAuOTkwNWEuNjkxNS42OTE1IDAgMCAxLS4wMDcyLjk0NWwtMS4wNjY2IDEuMTMzLTEuNDk4Mi0xLjc3MjQtOC41OTk0LTEwLjM5Yy0uMzI4Ni0uNDcyLS4zNTItLjYxODMtLjI1OTItLjg0MWEuNzMwNy43MzA3IDAgMCAxIC42NzA0LS40NDAxWm0xNC4zNDEgMS41NzAxYS44NzcuODc3IDAgMCAwLS42NTU0LjI0MThsLTUuNjk2MiA2LjE1ODQgMS42OTQ0IDEuODMxOSA1LjMwODktNi41MTM4Yy4zMjUxLS40MzM1LjQ3OS0uNjYwMy4zMjQ3LTEuMDI5MmExLjEyMDUgMS4xMjA1IDAgMCAwLS45NzYzLS42ODl6bS03LjY1NTcgMTIuMjgyMyAxLjMxODYgMS40MTM1LTUuNzg2NCA2LjEyOTVhLjY0OTQuNjQ5NCAwIDAgMS0uNDk1OS4yNi43NTE2Ljc1MTYgMCAwIDEtLjcwNi0uNDY2OWMtLjExMTktLjI2ODIuMDM1OS0uNjg2NC4yNDQyLS45MDgzbC4wMDUxLS4wMDU1LjAwNDctLjAwNTV6Ii8+PC9zdmc+Cg==");
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: contain;
+      }
+
+      .section-title {
+        margin-top: 38px;
+        font-size: clamp(1.42rem, 2.2vw, 1.9rem);
+        position: relative;
+      }
+
+      .section-title::before {
+        content: "";
+        display: block;
+        width: min(980px, 100%);
+        height: 1px;
+        margin: 0 auto 14px;
+        background: #e3e3e3;
+      }
+
+      .section-title::after {
+        content: "";
+        display: block;
+        width: min(150px, 40vw);
+        height: 3px;
+        margin: 10px auto 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #d8a46e, #bc7633);
+      }
+
+      .abstract-text {
+        width: min(900px, 100%);
+        margin: 14px auto 8px;
+        font-size: clamp(1rem, 1.2vw, 1.12rem);
+        line-height: 1.72;
+        text-align: justify;
+        color: #3c3c3c;
+      }
+
+      .tldr-box {
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: var(--panel-tint);
+        border: 1px solid #ead8c2;
+      }
+
+      .teaser {
+        width: min(960px, 100%);
+        margin: 18px auto 12px;
+      }
+
+      .teaser img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .subsection {
+        margin-top: 22px;
+        padding: 16px;
+        border: none;
+        border-radius: 14px;
+        background: #ffffff;
+      }
+
+      .subsection h3 {
+        font-size: clamp(1.24rem, 2.3vw, 1.66rem);
+        margin-bottom: 6px;
+      }
+
+      .subsection-text {
+        width: min(920px, 100%);
+        margin: 8px auto 10px;
+        font-size: clamp(0.98rem, 1.05vw, 1.06rem);
+        line-height: 1.64;
+        text-align: justify;
+        color: #3f3f3f;
+      }
+
+      .subsection-text a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .subsection-text a:hover {
+        text-decoration: none;
+      }
+
+      .frame {
+        margin: 12px auto 0;
+        width: min(720px, 100%);
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--panel-bg);
+      }
+
+      .frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .frame img.half-size-image {
+        width: 50%;
+        margin: 0 auto;
+      }
+
+      .data-compare-grid {
+        width: min(980px, 100%);
+        margin: 12px auto 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .data-compare-item {
+        margin: 0;
+      }
+
+      .data-compare-media {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .data-compare-media img,
+      .data-compare-media video {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .data-compare-media img {
+        object-fit: contain;
+      }
+
+      .data-compare-media video {
+        object-fit: cover;
+        background: #ffffff;
+      }
+
+      .data-compare-caption {
+        margin-top: 6px;
+        font-size: 0.86rem;
+        color: #5f4a36;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .dense-wrap {
+        margin-top: 20px;
+      }
+
+      .dense-card {
+        width: min(900px, 100%);
+        margin: 0 auto;
+        border: none;
+        border-radius: 12px;
+        background: var(--panel-tint);
+        padding: 14px;
+        --scene-ar: 4 / 3;
+      }
+
+      .dense-head {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        font-size: 0.98rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #1e1e1e;
+      }
+
+      .dense-grid {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .img-pane,
+      .viewer-pane,
+      .video-pane {
+        border: none;
+        border-radius: 10px;
+        background: #ffffff;
+        position: relative;
+        aspect-ratio: var(--scene-ar);
+        overflow: hidden;
+      }
+
+      .img-pane {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .img-pane img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .compare-stage {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        overflow: hidden;
+        --split: 50%;
+      }
+
+      .compare-media {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        user-select: none;
+        -webkit-user-drag: none;
+        pointer-events: none;
+        background: #fff5e9;
+      }
+
+      #videoCompareStage .compare-media {
+        object-fit: cover;
+      }
+
+      .compare-media.before {
+        clip-path: inset(0 calc(100% - var(--split)) 0 0);
+      }
+
+      .compare-media.after {
+        clip-path: inset(0 0 0 var(--split));
+      }
+
+      .overlay-label {
+        position: absolute;
+        bottom: 8px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: #6a4b2d;
+        background: rgba(255, 255, 255, 0.93);
+        border: none;
+        border-radius: 999px;
+        padding: 2px 8px;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .overlay-label.before {
+        left: 6px;
+      }
+
+      .overlay-label.after {
+        right: 6px;
+      }
+
+      .compare-splitter {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--split);
+        width: 28px;
+        transform: translateX(-50%);
+        cursor: ew-resize;
+        z-index: 4;
+        touch-action: none;
+      }
+
+      .compare-splitter-line {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 1.5px;
+        margin-left: -1px;
+        background: #b26b2d;
+        pointer-events: none;
+      }
+
+      .compare-splitter-handle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 24px;
+        height: 24px;
+        margin: -12px 0 0 -12px;
+        border-radius: 50%;
+        border: 1.5px solid #b26b2d;
+        background: #ffffff;
+        color: #b26b2d;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 20px;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .viewer-toolbar {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .viewer-toolbar label {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #1e1e1e;
+      }
+
+      .viewer-toolbar select {
+        margin-left: 8px;
+        border: 1px solid var(--line-strong);
+        background: #ffffff;
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: 0.94rem;
+      }
+
+      .status {
+        font-size: 0.9rem;
+        color: var(--text-soft);
+      }
+
+      .dense-foot {
+        margin-top: 10px;
+        font-size: 0.98rem;
+        font-weight: 600;
+      }
+
+      .note {
+        margin-top: 8px;
+        font-size: 0.86rem;
+        color: #896f56;
+      }
+
+      .sim-section {
+        margin-top: 14px;
+        padding: 10px 4px;
+      }
+
+      .sim-intro {
+        margin-top: 2px;
+        margin-bottom: 14px;
+      }
+
+      .sim-req-inline {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .sim-req-trigger {
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: inherit;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: none;
+      }
+
+      .sim-req-tip {
+        display: inline-block;
+        margin-left: 6px;
+        font-size: 0.83rem;
+        color: #7b6046;
+        font-style: italic;
+        white-space: nowrap;
+      }
+
+      .sim-req-trigger:focus-visible {
+        outline: 2px solid #b26b2d;
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+
+      .sim-req-icon {
+        display: inline-flex;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #b78c62;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.68rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #6a4b2d;
+      }
+
+      .sim-req-popup {
+        position: fixed;
+        width: min(460px, calc(100vw - 24px));
+        border: 1px solid #decab2;
+        border-radius: 10px;
+        background: #fffdf9;
+        box-shadow: 0 8px 22px rgba(61, 45, 28, 0.14);
+        padding: 10px 12px;
+        text-align: left;
+        color: #4a3929;
+        font-size: 0.86rem;
+        line-height: 1.45;
+        z-index: 1200;
+      }
+
+      .sim-carousel {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) 34px;
+        gap: 8px;
+        align-items: center;
+        width: min(980px, 100%);
+        margin: 0 auto;
+      }
+
+      @media (max-width: 1024px) {
+        .sim-carousel {
+          width: 100%;
+          margin-left: 0;
+        }
+      }
+
+      .sim-nav {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #d7d7d7;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #1f2a3c;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          transform 160ms ease,
+          background 160ms ease;
+      }
+
+      .sim-nav:hover {
+        background: #f7f1ea;
+        transform: translateY(-1px);
+      }
+
+      .sim-stage {
+        position: relative;
+        background: var(--panel-tint);
+        border-radius: 22px;
+        overflow: hidden;
+      }
+
+      .sim-slide {
+        display: none;
+        padding-bottom: 40px;
+      }
+
+      .sim-slide.active {
+        display: block;
+        position: relative;
+        pointer-events: auto;
+      }
+
+      .sim-card {
+        width: 100%;
+        border: none;
+        border-radius: 22px;
+        background: transparent;
+        padding: 14px 10px 2px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sim-step-title {
+        font-size: clamp(1.04rem, 1.6vw, 1.24rem);
+        line-height: 1.34;
+        font-weight: 700;
+        text-align: left;
+        color: #1f1f1f;
+      }
+
+      .sim-assume {
+        display: block;
+        margin-top: 3px;
+        font-size: 0.82em;
+        font-weight: 600;
+        color: #4a4a4a;
+      }
+
+      .sim-flow {
+        margin-top: 6px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .sim-slide[data-slide-index="1"] .sim-flow {
+        align-items: flex-start;
+      }
+
+      .sim-flow-single {
+        width: min(760px, 99%);
+      }
+
+      .sim-flow-pair {
+        width: min(980px, 99.5%);
+        display: grid;
+        grid-template-columns: 1fr minmax(40px, 0.12fr) 1fr;
+        gap: 6px;
+        align-items: start;
+      }
+
+      .sim-arrow-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        align-self: center;
+      }
+
+      .sim-grid-ops {
+        width: min(1000px, 100%);
+        display: grid;
+        grid-template-columns: 1fr minmax(40px, 0.12fr) 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 8px 12px;
+        align-items: start;
+      }
+
+      .sim-mid-note {
+        font-size: 0.76rem;
+        line-height: 1.25;
+        color: #383838;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .sim-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .sim-under-note {
+        min-height: 1.5em;
+        font-size: 0.72rem;
+        line-height: 1.24;
+        color: #2f2f2f;
+        font-weight: 600;
+        text-align: center;
+        padding: 0 4px;
+      }
+
+      .sim-arrow-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        align-self: center;
+      }
+
+      .sim-arrow-note {
+        font-size: 0.72rem;
+        line-height: 1.22;
+        color: #2f2f2f;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      .sim-arrow-stack .sim-arrow {
+        font-size: 1.4rem;
+        margin: -4px 0;
+      }
+
+      .sim-step-media {
+        position: relative;
+      }
+
+      .sim-step-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .sim-step-toolbar {
+        position: static;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .sim-step-arrow,
+      .sim-step-play {
+        border: 1px solid #ccb9a5;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #2d2d2d;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .sim-step-arrow {
+        width: 24px;
+        height: 24px;
+        line-height: 1;
+        font-size: 1rem;
+        padding: 0;
+      }
+
+      .sim-step-play {
+        height: 24px;
+        padding: 0 7px;
+        font-size: 0.73rem;
+      }
+
+      .sim-step-chip {
+        min-width: 92px;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #d8c9b8;
+        font-size: 0.72rem;
+        line-height: 1.2;
+        font-weight: 700;
+        color: #2a2a2a;
+        text-align: center;
+      }
+
+      .sim-media {
+        border: none;
+        border-radius: 10px;
+        background: #ffffff;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        padding: 2px;
+        overflow: hidden;
+        position: relative;
+        transition:
+          box-shadow 280ms ease,
+          transform 280ms ease;
+      }
+
+      .sim-media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .sim-media.shared-highlight {
+        box-shadow: 0 0 0 3px rgba(224, 138, 62, 0.36);
+        transform: scale(1.015);
+      }
+
+      .sim-label {
+        position: absolute;
+        left: 8px;
+        top: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.93);
+        border: 1px solid #d6d6d6;
+        padding: 2px 8px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        color: #2c2c2c;
+      }
+
+      .sim-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #1e1e1e;
+        font-size: 1.5rem;
+        font-weight: 700;
+        user-select: none;
+      }
+
+      .sim-arrow.note {
+        font-size: 1rem;
+        line-height: 1;
+        margin: -4px 0;
+      }
+
+      .sim-bottom {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 12px;
+      }
+
+      .sim-controls {
+        margin-top: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .sim-controls label {
+        font-size: 0.95rem;
+        font-weight: 700;
+      }
+
+      .sim-controls select {
+        margin-left: 8px;
+        border: 1px solid #cecece;
+        border-radius: 8px;
+        padding: 5px 9px;
+        font-size: 0.93rem;
+      }
+
+      .sim-btn {
+        border: 1px solid #c7c7c7;
+        border-radius: 8px;
+        padding: 5px 11px;
+        background: #ffffff;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #2c2c2c;
+      }
+
+      .sim-btn:hover {
+        background: #f4ede4;
+      }
+
+      .sim-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+      }
+
+      .sim-dot {
+        width: 10px;
+        height: 10px;
+        aspect-ratio: 1 / 1;
+        flex: 0 0 10px;
+        padding: 0;
+        display: block;
+        border: none;
+        border-radius: 50%;
+        background: #b6b6b6;
+        cursor: pointer;
+      }
+
+      .sim-dot.active {
+        background: #a45e1f;
+        transform: scale(1.1);
+      }
+
+      .sim-status {
+        font-size: 0.87rem;
+        color: #5b5b5b;
+      }
+
+      .sim-stage-footer {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        z-index: 6;
+      }
+
+      .sim-stage-footer label {
+        font-size: 0.92rem;
+        font-weight: 700;
+      }
+
+      .sim-stage-footer select {
+        margin-left: 8px;
+        border: 1px solid #cecece;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 0.9rem;
+        background: #ffffff;
+      }
+
+      .sim-analysis {
+        width: min(1080px, 100%);
+        margin: 14px auto 0;
+        text-align: left;
+      }
+
+      .sim-analysis-text {
+        width: min(980px, 100%);
+        margin: 0 auto 10px;
+        font-size: clamp(0.94rem, 1.02vw, 1.02rem);
+        line-height: 1.6;
+        color: #3f3f3f;
+      }
+
+      .sim-analysis-table-wrap {
+        width: 100%;
+        border: 1px solid #ead8c2;
+        background: #ffffff;
+        overflow-x: auto;
+      }
+
+      .sim-analysis-table {
+        width: 100%;
+        min-width: 980px;
+        border-collapse: collapse;
+        color: #2f241a;
+        font-size: 0.82rem;
+      }
+
+      .sim-analysis-table thead th {
+        background: #f8ebdd;
+        border-bottom: 1px solid #decab2;
+        text-align: center;
+        padding: 6px 4px;
+        font-weight: 700;
+      }
+
+      .sim-analysis-table thead tr:nth-child(2) th,
+      .sim-analysis-table thead tr:nth-child(3) th {
+        background: #fff4e8;
+      }
+
+      .sim-analysis-table tbody td {
+        border-top: 1px solid #efdfcb;
+        padding: 5px 4px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .sim-analysis-table tbody td.sim-method {
+        text-align: left;
+        min-width: 220px;
+        white-space: normal;
+      }
+
+      .sim-analysis-table tbody td.sim-difficulty {
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      .sim-analysis-table tbody tr.sim-divider td {
+        border-top: 2px solid #d7b899;
+      }
+
+      .results-section {
+        margin-top: 10px;
+      }
+
+      .results-container {
+        width: min(1080px, 100%);
+        margin: 0 auto;
+        background: var(--panel-tint);
+        border-radius: 16px;
+        padding: 14px;
+      }
+
+      .results-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .results-controls .spacer {
+        flex: 1;
+      }
+
+      .results-page-info {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #2f241a;
+      }
+
+      .results-nav-btn {
+        border: 1px solid #d8c9b8;
+        border-radius: 999px;
+        padding: 6px 11px;
+        background: #ffffff;
+        color: #2f241a;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          transform 120ms ease,
+          background 120ms ease;
+      }
+
+      .results-nav-btn:hover {
+        background: #f6eee4;
+        transform: translateY(-1px);
+      }
+
+      .results-nav-btn:disabled {
+        opacity: 0.5;
+        cursor: default;
+        transform: none;
+      }
+
+      .results-page {
+        display: grid;
+        gap: 14px;
+      }
+
+      .results-scene {
+        border: 1px solid #ead8c2;
+        border-radius: 12px;
+        padding: 13px;
+        background: #ffffff;
+      }
+
+      .results-scene-title {
+        text-align: left;
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #2f241a;
+      }
+
+      .results-scene-grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        align-items: start;
+      }
+
+      .results-media-card {
+        margin: 0;
+      }
+
+      .results-media {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        border-radius: 10px;
+        border: 1px solid #e7e0d5;
+        background: #ffffff;
+        overflow: hidden;
+        box-shadow: 0 6px 16px rgba(148, 163, 184, 0.18);
+      }
+
+      .results-media img,
+      .results-media video {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .results-media img {
+        object-fit: contain;
+      }
+
+      .results-media video {
+        object-fit: cover;
+        background: #020617;
+      }
+
+      .results-caption {
+        margin-top: 6px;
+        font-size: 0.86rem;
+        color: #5f4a36;
+        text-align: center;
+      }
+
+      .results-pager {
+        margin-top: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .results-pager-info {
+        padding: 6px 10px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #3a2f24;
+      }
+
+      .results-note-inline {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin-left: 6px;
+      }
+
+      .results-note-trigger {
+        border: 1px solid #d7c1a8;
+        border-radius: 999px;
+        background: var(--panel-tint);
+        color: #6a4b2d;
+        font-size: 0.83rem;
+        font-weight: 700;
+        line-height: 1.1;
+        padding: 4px 10px 4px 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .results-note-trigger:hover {
+        background: #f7e8d8;
+      }
+
+      .results-note-trigger:focus-visible {
+        outline: 2px solid #b26b2d;
+        outline-offset: 2px;
+      }
+
+      .results-note-icon {
+        display: inline-flex;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #b78c62;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .results-note-popup {
+        position: fixed;
+        width: min(420px, calc(100vw - 24px));
+        border: 1px solid #decab2;
+        border-radius: 10px;
+        background: #fffdf9;
+        box-shadow: 0 8px 22px rgba(61, 45, 28, 0.14);
+        padding: 10px 12px;
+        text-align: left;
+        color: #4a3929;
+        z-index: 1200;
+      }
+
+      .results-note-title {
+        font-size: 0.86rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .results-note-content {
+        margin: 0;
+        font-size: 0.85rem;
+        line-height: 1.45;
+      }
+
+      .bibtex-wrap {
+        width: min(900px, 100%);
+        margin: 0 auto;
+        border: 1px solid #ead8c2;
+        border-radius: 12px;
+        background: var(--panel-tint);
+        overflow: auto;
+      }
+
+      .bibtex-wrap pre {
+        margin: 0;
+        padding: 14px;
+        text-align: left;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #2f241a;
+      }
+
+      .reference-line {
+        width: min(920px, 100%);
+        margin: 0 auto;
+        font-size: 0.98rem;
+        line-height: 1.35;
+        text-align: center;
+        color: #3f3f3f;
+      }
+
+      .reference-compact {
+        margin-top: 10px;
+        padding: 10px 12px;
+      }
+
+      .reference-label {
+        font-weight: 700;
+      }
+
+      .badsfm-row {
+        width: min(900px, 100%);
+        margin: 8px auto 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.9fr);
+        gap: 16px;
+        align-items: center;
+      }
+
+      .badsfm-row .subsection-text {
+        width: min(560px, 100%);
+        margin: 0;
+      }
+
+      .badsfm-frame {
+        margin: 0;
+        width: 100%;
+      }
+
+      .badsfm-frame img {
+        width: 80%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        object-fit: contain;
+      }
+
+      .recon-hist-block {
+        width: min(900px, 100%);
+        margin: 12px auto 0;
+        padding: 10px 12px 8px;
+        border-radius: 12px;
+        background: var(--panel-tint);
+      }
+
+      .recon-hist-row {
+        display: grid;
+        grid-template-columns: 132px minmax(0, 1fr) 56px;
+        gap: 10px;
+        align-items: center;
+        margin: 8px 0;
+      }
+
+      .recon-hist-label {
+        text-align: left;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #2f241a;
+      }
+
+      .recon-hist-track {
+        height: 12px;
+        border-radius: 999px;
+        background: #ece7df;
+        overflow: hidden;
+      }
+
+      .recon-hist-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #c88745, #ad6d2d);
+      }
+
+      .recon-hist-value {
+        text-align: right;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #2f241a;
+      }
+
+      .recon-hist-caption {
+        margin-top: 6px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #2f241a;
+        text-align: center;
+        letter-spacing: 0.02em;
+      }
+
+      .reference-line a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .reference-line a:hover {
+        text-decoration: none;
+      }
+
+      @media (max-width: 760px) {
+        .paper {
+          margin-top: 14px;
+          padding: 14px;
+          border-radius: 14px;
+        }
+
+        .title {
+          font-size: clamp(1.6rem, 7.6vw, 2rem);
+        }
+
+        .subsection {
+          padding: 12px;
+        }
+
+        .dense-head,
+        .dense-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .img-pane,
+        .viewer-pane,
+        .video-pane {
+          min-height: 0;
+        }
+
+        .section-title {
+          margin-top: 24px;
+        }
+
+        .link-btn {
+          min-width: 96px;
+          font-size: 0.96rem;
+        }
+
+        .sim-section {
+          padding: 10px 6px;
+        }
+
+        .sim-slide {
+          padding-bottom: 122px;
+        }
+
+        .sim-card {
+          border-radius: 16px;
+          padding: 10px 8px;
+        }
+
+        .sim-carousel {
+          grid-template-columns: 1fr;
+        }
+
+        .sim-nav {
+          display: none;
+        }
+
+        .sim-flow-pair,
+        .sim-grid-ops {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+        }
+
+        .sim-cell {
+          gap: 2px;
+        }
+
+        .sim-under-note {
+          min-height: 0;
+          font-size: 0.7rem;
+        }
+
+        .sim-stage-footer {
+          bottom: 8px;
+          flex-direction: column;
+          gap: 7px;
+        }
+
+        .sim-step-toolbar {
+          justify-content: space-between;
+        }
+
+        .sim-mid-note,
+        .sim-arrow {
+          font-size: 1.05rem;
+        }
+
+        .sim-arrow.note {
+          font-size: 1.05rem;
+        }
+
+        .data-compare-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .results-controls {
+          flex-wrap: wrap;
+        }
+
+        .results-controls .spacer {
+          display: none;
+        }
+
+        .badsfm-row {
+          grid-template-columns: 1fr;
+        }
+
+        .recon-hist-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .recon-hist-label,
+        .recon-hist-value {
+          text-align: left;
+        }
+
+        .results-scene-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .results-note-popup {
+          width: min(320px, calc(100vw - 20px));
+        }
+
+        .sim-req-popup {
+          width: min(330px, calc(100vw - 20px));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="paper">
+      <h1 class="title">Long-Tail Internet Photo Reconstruction</h1>
+
+      <div class="authors">
+        <a
+          href="https://y-u-a-n-l-i.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Yuan Li</a
+        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
+        <a
+          href="https://kam1107.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Yuanbo Xiangli</a
+        ><sup>1&dagger;</sup> &nbsp;&nbsp;&nbsp;
+        <a
+          href="https://www.hadarelor.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Hadar Averbuch-Elor</a
+        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
+        <a
+          href="https://www.cs.cornell.edu/~snavely/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Noah Snavely</a
+        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
+        <a
+          href="https://ruojincai.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Ruojin Cai</a
+        ><sup>2&dagger;</sup>
+      </div>
+      <div class="affils">
+        <sup>1</sup>Cornell University &nbsp;&nbsp;&nbsp; <sup>2</sup>Kempner
+        Institute, Harvard University
+      </div>
+      <div class="corr-note">&dagger; Corresponding authors</div>
+      <div class="venue">CVPR2026</div>
+
+      <div class="btn-row">
+        <a
+          class="link-btn"
+          href=""
+          data-empty-link="true"
+          aria-label="arXiv link placeholder"
+        >
+          <span class="btn-icon" aria-hidden="true">
+            <i class="ai ai-arxiv"></i>
+          </span>
+          arXiv
+        </a>
+        <a
+          class="link-btn"
+          href=""
+          data-empty-link="true"
+          aria-label="Code link placeholder"
+        >
+          <span class="btn-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 16 16"
+              width="16"
+              height="16"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.66 7.66 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              />
+            </svg>
+          </span>
+          Code
+        </a>
+        <a
+          class="link-btn"
+          href="https://huggingface.co/datasets/y-u-a-n-l-i/MegaDepth-X"
+          data-empty-link="true"
+          aria-label="Dataset link placeholder"
+        >
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path
+                d="M12 3c4.4 0 8 1.6 8 3.5S16.4 10 12 10 4 8.4 4 6.5 7.6 3 12 3Zm8 6v3.5c0 1.9-3.6 3.5-8 3.5s-8-1.6-8-3.5V9c1.7 1.3 4.8 2 8 2s6.3-.7 8-2Zm0 6v2.5c0 1.9-3.6 3.5-8 3.5s-8-1.6-8-3.5V15c1.7 1.3 4.8 2 8 2s6.3-.7 8-2Z"
+              />
+            </svg>
+          </span>
+          Dataset
+        </a>
+      </div>
+
+      <p class="abstract-text tldr-box">
+        <b>TL;DR:</b> We define long-tail Internet photo reconstruction by an
+        extremely uneven camera-view distribution, and contribute a new dataset
+        plus a sampling-emulation strategy for this setting.
+      </p>
+
+      <div class="teaser">
+        <img src="material/teaser.jpg" alt="Teaser" />
+      </div>
+
+      <h2 class="section-title">Abstract</h2>
+
+      <p class="abstract-text">
+        Internet photo collections exhibit an extremely long-tailed
+        distribution: a few famous landmarks are densely photographed and easily
+        reconstructed in 3D, while most real-world sites are represented with
+        sparse, noisy, uneven imagery beyond the capabilities of both classical
+        and learned 3D methods. We believe that tackling this long-tail regime
+        represents one of the next frontiers for 3D foundation models. Although
+        reliable ground-truth 3D supervision from sparse scenes is challenging
+        to acquire, we observe that it can be effectively simulated by sampling
+        sparse subsets from well-reconstructed Internet landmarks. To this end,
+        we introduce MegaDepth-X, a large dataset of 3D reconstrucions with
+        clean, dense depth, together with a strategy for sampling sets of
+        training images that mimic camera distributions in long-tail scenes.
+        Finetuning 3D foundation models with these components yields robust
+        reconstructions under extreme sparsity, and also enables more reliable
+        reconstruction in symmetric and repetitive scenes, while preserving
+        generalization to standard, dense 3D benchmark datasets.
+      </p>
+
+      <h2 class="section-title">The MegaDepth-X Dataset</h2>
+
+      <section class="subsection">
+        <h3>Data preparation</h3>
+
+        <p class="subsection-text">
+          Learning in the long-tail regime requires high-quality 3D supervision
+          derived from Internet photo collections. Our data pipeline combines
+          <a
+            href="https://github.com/naver/mast3r"
+            target="_blank"
+            rel="noopener noreferrer"
+            >MASt3R-SfM</a
+          >
+          together with
+          <a
+            href="https://github.com/doppelgangers25/doppelgangers-plusplus"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Doppelgangers++</a
+          >, 
+          which reconstructs ambiguity-heavy scenes
+          more reliably than COLMAP, especially under repetitive structures and
+          challenging viewpoint distributions. We then run multi-view stereo
+          (MVS) with
+          <a
+            href="https://github.com/colmap/colmap"
+            target="_blank"
+            rel="noopener noreferrer"
+            >COLMAP</a
+          >
+          to obtain dense depth maps, followed by post-processing to further
+          refine depth quality.
+        </p>
+
+        <div class="data-compare-grid">
+          <figure class="data-compare-item">
+            <div class="data-compare-media">
+              <img src="material/depth/inputs.png" alt="Input Images" />
+            </div>
+            <figcaption class="data-compare-caption">Input Images</figcaption>
+          </figure>
+
+          <figure class="data-compare-item">
+            <div class="data-compare-media">
+              <video muted loop autoplay playsinline preload="metadata">
+                <source src="material/depth/megascenes.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <figcaption class="data-compare-caption">COLMAP</figcaption>
+          </figure>
+
+          <figure class="data-compare-item">
+            <div class="data-compare-media">
+              <video muted loop autoplay playsinline preload="metadata">
+                <source src="material/depth/megadepthx.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <figcaption class="data-compare-caption">
+              MASt3R-SFM with Doppelgangers++
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="subsection">
+        <h3>Filtering bad SFM reconstructions</h3>
+
+        <!-- <div class="badsfm-row"> -->
+        <p class="subsection-text">
+          We also manually verify reconstructed scenes against external
+          references (e.g., Google Maps and Google Earth), and discard any
+          scene that does not align with the corresponding bird's-eye-view
+          geometry.
+        </p>
+
+        <div class="frame badsfm-frame">
+          <img
+            src="material/depth/bad_sfm.png"
+            alt="Filtering bad SfM reconstructions"
+          />
+        </div>
+
+        <p class="subsection-text">
+          After this filtering stage, we eventually curate <b>MegaDepth-X</b>, which
+          is substantially larger than the commonly used in-the-wild
+          reconstruction dataset,
+          <a
+            href="https://www.cs.cornell.edu/projects/megadepth/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >MegaDepth</a
+          >.
+        </p>
+
+        <div class="recon-hist-block" aria-label="Reconstruction count comparison">
+          <div class="recon-hist-row">
+            <div class="recon-hist-label">MegaDepth-X</div>
+            <div class="recon-hist-track">
+              <div class="recon-hist-fill" style="width: 100%"></div>
+            </div>
+            <div class="recon-hist-value">1865</div>
+          </div>
+          <div class="recon-hist-row">
+            <div class="recon-hist-label">MegaDepth</div>
+            <div class="recon-hist-track">
+              <div class="recon-hist-fill" style="width: 11.9%"></div>
+            </div>
+            <div class="recon-hist-value">221</div>
+          </div>
+          <div class="recon-hist-caption">reconstructions</div>
+        </div>
+        <!-- </div> -->
+      </section>
+
+      
+
+      <section class="subsection dense-wrap">
+        <h3>Dense depth refinement</h3>
+
+        <p class="subsection-text">
+          We further refine MVS depth maps to mitigate depth bleeding (where
+          background depths leak into foreground regions), and to reduce
+          inconsistent or noisy estimates in areas affected by transient
+          objects, such as people, cars, or seasonal vegetation changes.
+        </p>
+
+        <div class="dense-card">
+          <div class="dense-head">
+            <div>Image</div>
+            <div>Depth</div>
+            <div>Point Cloud</div>
+          </div>
+
+          <div class="dense-grid">
+            <div class="img-pane">
+              <img
+                id="sceneImage"
+                src="material/depth/Baptistry_(Siena)/img.jpg"
+                alt="Selected scene image"
+              />
+            </div>
+
+            <div class="video-pane">
+              <div id="imageCompareStage" class="compare-stage">
+                <img
+                  id="beforeCompareImage"
+                  class="compare-media before"
+                  src="material/depth/Baptistry_(Siena)/before.jpg"
+                  alt="Before comparison image"
+                />
+                <img
+                  id="afterCompareImage"
+                  class="compare-media after"
+                  src="material/depth/Baptistry_(Siena)/after.jpg"
+                  alt="After comparison image"
+                />
+                <div class="overlay-label before">Before</div>
+                <div class="overlay-label after">After</div>
+                <div
+                  id="imageCompareSplitter"
+                  class="compare-splitter"
+                  role="slider"
+                  aria-label="Resize before and after images"
+                  aria-orientation="vertical"
+                  aria-valuemin="2"
+                  aria-valuemax="98"
+                  aria-valuenow="50"
+                  tabindex="0"
+                >
+                  <div class="compare-splitter-line"></div>
+                  <div class="compare-splitter-handle">&lt;&gt;</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="video-pane">
+              <div id="videoCompareStage" class="compare-stage">
+                <video
+                  id="beforeCompareVideo"
+                  class="compare-media before"
+                  muted
+                  loop
+                  autoplay
+                  playsinline
+                  preload="metadata"
+                ></video>
+                <video
+                  id="afterCompareVideo"
+                  class="compare-media after"
+                  muted
+                  loop
+                  autoplay
+                  playsinline
+                  preload="metadata"
+                ></video>
+                <div class="overlay-label before">Before</div>
+                <div class="overlay-label after">After</div>
+                <div
+                  id="videoCompareSplitter"
+                  class="compare-splitter"
+                  role="slider"
+                  aria-label="Resize before and after videos"
+                  aria-orientation="vertical"
+                  aria-valuemin="2"
+                  aria-valuemax="98"
+                  aria-valuenow="50"
+                  tabindex="0"
+                >
+                  <div class="compare-splitter-line"></div>
+                  <div class="compare-splitter-handle">&lt;&gt;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewer-toolbar">
+            <label>
+              Scene
+              <select id="sceneSelect"></select>
+            </label>
+            <div id="viewerStatus" class="status">Loading comparisons...</div>
+          </div>
+
+          <!-- <div id="sceneFoot" class="dense-foot">
+            SCENE: Baptistry_(Siena), Royal_Albert_Hall, Sant'Andrea_(Vercelli)
+          </div> -->
+          <div class="note">
+            Tip: drag each splitter to compare before/after dense depth
+            refinement.
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Simulating Long-Tail Scenes</h2>
+
+      <section class="subsection sim-section">
+        <p class="subsection-text sim-intro">
+          We simulate long-tail scene conditions by sampling sparse views from dense SfM reconstructions. 
+          Following the paper, the sampling process is designed to satisfy three requirements: 
+          <span class="sim-req-inline">
+            <button
+              type="button"
+              id="simReqDiversityTrigger"
+              class="sim-req-trigger"
+              data-popup-target="simReqDiversityPopup"
+              aria-expanded="false"
+              aria-controls="simReqDiversityPopup"
+            >
+              viewpoint diversity <span class="sim-req-icon" aria-hidden="true">i</span>
+            </button>
+            <span
+              id="simReqDiversityPopup"
+              class="sim-req-popup"
+              role="dialog"
+              aria-label="Viewpoint diversity note"
+              hidden
+              >The sampled views should cover a wide range of viewing
+              directions, ensuring that emulated scenes span diverse visual
+              perspectives.</span
+            >
+          </span>,
+          <span class="sim-req-inline">
+            <button
+              type="button"
+              id="simReqSparsityTrigger"
+              class="sim-req-trigger"
+              data-popup-target="simReqSparsityPopup"
+              aria-expanded="false"
+              aria-controls="simReqSparsityPopup"
+            >
+              sparsity <span class="sim-req-icon" aria-hidden="true">i</span>
+            </button>
+            <span
+              id="simReqSparsityPopup"
+              class="sim-req-popup"
+              role="dialog"
+              aria-label="Sparsity note"
+              hidden
+              >The selected views should be far enough apart to mimic the wide
+              baselines typical of long-tail scenes, e.g. loosely connected
+              views or views from disconnected scene components, encouraging the
+              model to learn robust geometric priors rather than relying on
+              dense feature matches.</span
+            >
+          </span>, and
+          <span class="sim-req-inline">
+            <button
+              type="button"
+              id="simReqLocalReconsTrigger"
+              class="sim-req-trigger"
+              data-popup-target="simReqLocalReconsPopup"
+              aria-expanded="false"
+              aria-controls="simReqLocalReconsPopup"
+            >
+              local reconstructability <span class="sim-req-icon" aria-hidden="true">i</span>
+            </button>
+            <span
+              id="simReqLocalReconsPopup"
+              class="sim-req-popup"
+              role="dialog"
+              aria-label="Local reconstructability note"
+              hidden
+              >Despite the sparsity, views within each sampled scene component
+              should retain enough covisibility to remain locally
+              reconstructable, since zero-overlap samples within a scene
+              component can lead to unstable training signals and difficult
+              optimization.</span
+            >
+          </span>. 
+          The examples below show sampling procedures for a mini batch of 24 views.
+          <!-- <span class="sim-req-tip">* Click a term to view details.</span> -->
+        </p>
+
+        <div class="sim-carousel" id="simCarousel">
+          <button
+            id="simPrev"
+            class="sim-nav"
+            type="button"
+            aria-label="Previous slide"
+          >
+            &lt;
+          </button>
+
+          <div class="sim-stage" id="simStage">
+            <article class="sim-slide active" data-slide-index="0">
+              <div class="sim-card">
+                <div class="sim-step-title">
+                  0: Start from the SfM reconstruction.
+                </div>
+                <div class="sim-flow">
+                  <div class="sim-flow-single">
+                    <div class="sim-media" data-share-key="init">
+                      <img
+                        data-image-key="init"
+                        alt="Initial SfM reconstruction"
+                      />
+                      <div class="sim-label">SfM reconstruction</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="sim-slide" data-slide-index="1">
+              <div class="sim-card">
+                <div class="sim-step-title">
+                  1: Identify communities and derive partitions.<span
+                    class="sim-assume"
+                    >Assuming two partitions.</span
+                  >
+                </div>
+                <div class="sim-flow">
+                  <div class="sim-grid-ops">
+                    <div class="sim-cell">
+                      <div class="sim-media" data-share-key="init">
+                        <img data-image-key="init" alt="Initial SfM input" />
+                        <div class="sim-label">SfM reconstruction</div>
+                      </div>
+                    </div>
+                    <div class="sim-arrow">&rarr;</div>
+                    <div class="sim-cell">
+                      <div class="sim-media">
+                        <img
+                          data-image-key="community"
+                          alt="Community estimation"
+                        />
+                        <div class="sim-label">Communities</div>
+                      </div>
+                      <div class="sim-under-note">
+                        Identify communities that represent different viewing
+                        perspectives. Different colors indicate different communities.
+                      </div>
+                    </div>
+
+                    <div class="sim-arrow note">&darr;</div>
+                    <div></div>
+                    <div class="sim-arrow note">&darr;</div>
+
+                    <div class="sim-cell">
+                      <div class="sim-media">
+                        <img
+                          data-image-key="partition"
+                          alt="Partition result"
+                        />
+                        <div class="sim-label">Partitions</div>
+                      </div>
+                      <div class="sim-under-note">
+                        Create N<sub>cc</sub> partitions for N<sub>cc</sub>
+                        sampled connected components (here, N<sub>cc</sub> = 2).
+                      </div>
+                    </div>
+                    <div class="sim-arrow">&rarr;</div>
+                    <div class="sim-cell">
+                      <div class="sim-media" data-share-key="random_samples">
+                        <img
+                          data-image-key="random_samples"
+                          alt="Random terminal samples"
+                        />
+                        <div class="sim-label">Random terminals</div>
+                      </div>
+                      <div class="sim-under-note">
+                        Randomly sample one terminal from each community.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="sim-slide" data-slide-index="2">
+              <div class="sim-card">
+                <div class="sim-step-title">
+                  2: Find a minimal connectivity subgraph that links the
+                  terminals in each partition.
+                </div>
+                <div class="sim-flow">
+                  <div class="sim-flow-pair">
+                    <div class="sim-media" data-share-key="random_samples">
+                      <img
+                        data-image-key="random_samples"
+                        alt="Random terminal samples"
+                      />
+                      <div class="sim-label">Random terminals</div>
+                    </div>
+                    <div class="sim-arrow-stack">
+                      <div class="sim-arrow">&rarr;</div>
+                    </div>
+                    <div class="sim-step-panel">
+                      <div class="sim-media" data-share-key="steiner_tree">
+                        <img
+                          data-image-key="steiner_tree"
+                          alt="Steiner tree subgraph"
+                        />
+                        <div class="sim-label">Steiner subgraph</div>
+                      </div>
+                      <div class="sim-under-note">
+                        Apply a Steiner tree algorithm to obtain a minimal
+                        connectivity subgraph.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="sim-slide" data-slide-index="3">
+              <div class="sim-card">
+                <div class="sim-step-title">
+                  3: Perform greedy view sampling to reach the target number of
+                  views.<span class="sim-assume"
+                    >Assuming 7 iterations per partition (8 sampled nodes per
+                    partition).</span
+                  >
+                </div>
+                <div class="sim-flow">
+                  <div class="sim-flow-pair">
+                    <div class="sim-step-panel">
+                      <div
+                        class="sim-step-toolbar"
+                        style="visibility: hidden"
+                        aria-hidden="true"
+                      >
+                        <button
+                          class="sim-step-arrow"
+                          type="button"
+                          aria-hidden="true"
+                        >
+                          &lt;
+                        </button>
+                        <div class="sim-step-chip" aria-hidden="true">
+                          Greedy step 1
+                        </div>
+                        <button
+                          class="sim-step-arrow"
+                          type="button"
+                          aria-hidden="true"
+                        >
+                          &gt;
+                        </button>
+                        <button
+                          class="sim-step-play"
+                          type="button"
+                          aria-hidden="true"
+                        >
+                          Auto-play
+                        </button>
+                      </div>
+                      <div class="sim-media" data-share-key="steiner_tree">
+                        <img
+                          data-image-key="steiner_tree"
+                          alt="Steiner tree input"
+                        />
+                        <div class="sim-label">Steiner subgraph</div>
+                      </div>
+                    </div>
+                    <div class="sim-arrow-stack">
+                      <div class="sim-arrow">&rarr;</div>
+                    </div>
+                    <div class="sim-step-panel">
+                      <div class="sim-step-toolbar">
+                        <button
+                          id="simStepPrev"
+                          class="sim-step-arrow"
+                          type="button"
+                          aria-label="Previous greedy step"
+                        >
+                          &lt;
+                        </button>
+                        <div id="simStepBadge" class="sim-step-chip">
+                          Greedy step 1
+                        </div>
+                        <button
+                          id="simStepNext"
+                          class="sim-step-arrow"
+                          type="button"
+                          aria-label="Next greedy step"
+                        >
+                          &gt;
+                        </button>
+                        <button
+                          id="simPlayBtn"
+                          class="sim-step-play"
+                          type="button"
+                        >
+                          Auto-play
+                        </button>
+                      </div>
+                      <div class="sim-media sim-step-media">
+                        <img data-image-key="step" alt="Greedy sampling step" />
+                        <div class="sim-label">Current step</div>
+                      </div>
+                      <div class="sim-under-note">
+                        Run greedy view sampling.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="sim-slide" data-slide-index="4">
+              <div class="sim-card">
+                <div class="sim-step-title">
+                  4: Randomly sample within each neighborhood to reach the
+                  target number of views.<span class="sim-assume"
+                    >Assuming N = 24.</span
+                  >
+                </div>
+                <div class="sim-flow">
+                  <div class="sim-flow-single">
+                    <div class="sim-media">
+                      <img
+                        data-image-key="final"
+                        alt="Final sampled view set"
+                      />
+                      <div class="sim-label">Final sampled set</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <div class="sim-stage-footer">
+              <label>
+                Scene
+                <select id="simSceneSelect"></select>
+              </label>
+              <div
+                id="simDots"
+                class="sim-dots"
+                aria-label="Slide indicators"
+              ></div>
+              <div id="simLoadStatus" class="sim-status">Ready</div>
+            </div>
+          </div>
+
+          <button
+            id="simNext"
+            class="sim-nav"
+            type="button"
+            aria-label="Next slide"
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div class="sim-analysis">
+          <p class="sim-analysis-text">
+            We compare two finetuning data construction strategies,
+            sparse-aware sampling and random sampling, on our curated
+            evaluation set with two difficulty levels (easy and hard). Overall, finetuning with
+            sparse-aware sampling yields better performance across both levels,
+            with clear gains on camera pose quality and most point map metrics.
+          </p>
+
+          <div class="sim-analysis-table-wrap">
+            <table class="sim-analysis-table" aria-label="Sparse-aware versus random sampling comparison">
+              <thead>
+                <tr>
+                  <th rowspan="3">Difficulty</th>
+                  <th rowspan="3">Method</th>
+                  <th colspan="5">Camera Pose Estimation</th>
+                  <th colspan="6">Point Map Estimation</th>
+                </tr>
+                <tr>
+                  <th rowspan="2">RRA@5↑</th>
+                  <th rowspan="2">RTA@5↑</th>
+                  <th rowspan="2">AUC@5↑</th>
+                  <th rowspan="2">MRE↓</th>
+                  <th rowspan="2">MTE↓</th>
+                  <th colspan="2">Acc↓</th>
+                  <th colspan="2">Comp↓</th>
+                  <th colspan="2">NC↑</th>
+                </tr>
+                <tr>
+                  <th>Mean</th>
+                  <th>Med.</th>
+                  <th>Mean</th>
+                  <th>Med.</th>
+                  <th>Mean</th>
+                  <th>Med.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="sim-difficulty" rowspan="2">easy</td>
+                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with sparse-aware sampling</td>
+                  <td><b>95.64</b></td>
+                  <td><b>76.85</b></td>
+                  <td><b>55.58</b></td>
+                  <td><b>1.64</b></td>
+                  <td><b>5.50</b></td>
+                  <td><b>0.035</b></td>
+                  <td><b>0.020</b></td>
+                  <td><b>0.024</b></td>
+                  <td><b>0.012</b></td>
+                  <td><b>0.724</b></td>
+                  <td><b>0.837</b></td>
+                </tr>
+                <tr>
+                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with random sampling</td>
+                  <td>95.08</td>
+                  <td>76.42</td>
+                  <td>55.00</td>
+                  <td>1.78</td>
+                  <td>5.72</td>
+                  <td>0.039</td>
+                  <td>0.021</td>
+                  <td>0.026</td>
+                  <td>0.013</td>
+                  <td>0.720</td>
+                  <td>0.831</td>
+                </tr>
+
+                <tr class="sim-divider">
+                  <td class="sim-difficulty" rowspan="2">hard</td>
+                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with sparse-aware sampling</td>
+                  <td><b>86.40</b></td>
+                  <td><b>71.00</b></td>
+                  <td><b>47.93</b></td>
+                  <td><b>5.72</b></td>
+                  <td><b>7.27</b></td>
+                  <td><b>0.068</b></td>
+                  <td>0.041</td>
+                  <td><b>0.066</b></td>
+                  <td><b>0.041</b></td>
+                  <td><b>0.713</b></td>
+                  <td><b>0.818</b></td>
+                </tr>
+                <tr>
+                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with random sampling</td>
+                  <td>85.93</td>
+                  <td>69.84</td>
+                  <td>47.17</td>
+                  <td>6.53</td>
+                  <td>7.78</td>
+                  <td>0.071</td>
+                  <td><b>0.040</b></td>
+                  <td>0.073</td>
+                  <td>0.045</td>
+                  <td>0.708</td>
+                  <td>0.812</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Experimental Results</h2>
+
+      <section class="subsection results-section">
+        <p class="subsection-text">
+          In this section, we show model predictions on <b>randomly selected</b>
+          long-tail scenes from the MegaScenes dataset, where COLMAP fails to
+          register any images. We present 18 scenes in total, with 2 scenes per
+          page.
+        </p>
+        <p class="subsection-text">
+          For each scene, we show input images, multi-view renderings from
+          pretrained <span class="pi-inline">π³</span> and ours, and Google
+          Earth top-down reference in a single row.
+          <span class="results-note-inline">
+            <button
+              type="button"
+              id="resultsNoteTrigger"
+              class="results-note-trigger"
+              aria-expanded="false"
+              aria-controls="resultsNotePopup"
+            >
+              <span class="results-note-icon" aria-hidden="true">i</span>Note
+            </button>
+            <span
+              id="resultsNotePopup"
+              class="results-note-popup"
+              role="dialog"
+              aria-label="Experimental results note"
+              hidden
+            >
+              <span class="results-note-title">Note</span>
+              <span class="results-note-content"
+                >For a fair comparison, pretrained
+                <span class="pi-inline">π³</span> and ours use the same
+                confidence threshold in each scene. We also discard predicted
+                camera views that contain too many low-confidence pixels.</span
+              >
+            </span>
+          </span>
+        </p>
+        <p class="subsection-text">
+          As shown in the results, our method predicts denser reconstructions
+          and is more robust than the pretrained model in sparse-view scenes,
+          textureless environments, lighting variations, doppelganger
+          ambiguities, and noisy input batches.
+        </p>
+
+        <div class="results-container">
+          <div class="results-controls">
+            <div id="resultsControlsPager" class="results-page-info"></div>
+            <div class="spacer"></div>
+            <button id="resultsPrevPage" class="results-nav-btn" type="button">
+              ◀ Prev
+            </button>
+            <button id="resultsNextPage" class="results-nav-btn" type="button">
+              Next ▶
+            </button>
+          </div>
+
+          <div id="resultsRoot"></div>
+
+          <div class="results-pager" id="resultsPager"></div>
+        </div>
+      </section>
+
+      <h2 class="section-title">Acknowledgements</h2>
+
+      <section class="subsection">
+        <p class="subsection-text">
+          This work was supported in part by the Institute of Information
+          &amp; Communications Technology Planning &amp; Evaluation (IITP)
+          grant funded by the Korean Government (MSIT) (No. RS-2024-00457882,
+          National AI Research Lab Project). We thank
+          <a
+            href="https://jot-jt.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Joseph Tung</a
+          >,
+          <a
+            href="https://therealevan.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Yiwen Zhang</a
+          >,
+          <a
+            href="https://hanyuc.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Hanyu Chen</a
+          >
+          and
+          <a
+            href="https://haian-jin.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Haian Jin</a
+          >
+          for discussion and help with MegaScenes dataset and depth
+          post-processing.
+        </p>
+      </section>
+
+      <h2 class="section-title">BibTeX</h2>
+
+      <section class="subsection">
+        <div class="bibtex-wrap">
+          <pre>@inproceedings{li2026longtail,
+  title={Long-Tail Internet Photo Reconstruction},
+  author={Li, Yuan and Xiangli, Yuanbo and Averbuch-Elor, Hadar and Snavely, Noah and Cai, Ruojin},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year={2026}
+}</pre>
+        </div>
+      </section>
+
+      <section class="subsection reference-compact">
+        <p class="reference-line">
+          <span class="reference-label">Reference:</span>
+          Website template reference:
+          <a
+            href="https://github.com/nerfies/nerfies.github.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Nerfies</a
+          >.
+        </p>
+      </section>
+
+    </main>
+
+    <script>
+      const SCENES = [
+        "Baptistry_(Siena)",
+        "Royal_Albert_Hall",
+        "Sant'Andrea_(Vercelli)",
+      ];
+      const sceneBase = "material/depth";
+
+      const sceneSelect = document.getElementById("sceneSelect");
+      const sceneImage = document.getElementById("sceneImage");
+      const denseCard = document.querySelector(".dense-card");
+      const beforeCompareImage = document.getElementById("beforeCompareImage");
+      const afterCompareImage = document.getElementById("afterCompareImage");
+      const beforeCompareVideo = document.getElementById("beforeCompareVideo");
+      const afterCompareVideo = document.getElementById("afterCompareVideo");
+      const statusText = document.getElementById("viewerStatus");
+      const imageCompareStage = document.getElementById("imageCompareStage");
+      const videoCompareStage = document.getElementById("videoCompareStage");
+      const imageCompareSplitter = document.getElementById(
+        "imageCompareSplitter",
+      );
+      const videoCompareSplitter = document.getElementById(
+        "videoCompareSplitter",
+      );
+
+      let activeToken = 0;
+
+      function setStatus(text) {
+        statusText.textContent = text;
+      }
+
+      function updateSceneAspectFromImage() {
+        const width = sceneImage.naturalWidth;
+        const height = sceneImage.naturalHeight;
+        if (!denseCard || width <= 0 || height <= 0) {
+          return;
+        }
+
+        denseCard.style.setProperty("--scene-ar", `${width} / ${height}`);
+      }
+
+      function setStageSplit(stage, splitter, value) {
+        const clamped = Math.min(0.98, Math.max(0.02, value));
+        const percent = `${(clamped * 100).toFixed(2)}%`;
+        stage.style.setProperty("--split", percent);
+        splitter.setAttribute(
+          "aria-valuenow",
+          String(Math.round(clamped * 100)),
+        );
+      }
+
+      function setSplitFromClientX(stage, splitter, clientX) {
+        const rect = stage.getBoundingClientRect();
+        if (rect.width <= 0) {
+          return;
+        }
+
+        const normalized = (clientX - rect.left) / rect.width;
+        setStageSplit(stage, splitter, normalized);
+      }
+
+      function loadImageWithFallback(img, paths, timeoutMs = 12000) {
+        return new Promise((resolve, reject) => {
+          let index = 0;
+
+          const tryNext = () => {
+            if (index >= paths.length) {
+              reject(new Error("Failed to load image candidates"));
+              return;
+            }
+
+            const path = paths[index++];
+            const timer = setTimeout(() => {
+              cleanup();
+              tryNext();
+            }, timeoutMs);
+
+            const onLoad = () => {
+              clearTimeout(timer);
+              cleanup();
+              resolve(path);
+            };
+
+            const onError = () => {
+              clearTimeout(timer);
+              cleanup();
+              tryNext();
+            };
+
+            const cleanup = () => {
+              img.removeEventListener("load", onLoad);
+              img.removeEventListener("error", onError);
+            };
+
+            img.addEventListener("load", onLoad);
+            img.addEventListener("error", onError);
+            img.src = encodeURI(path);
+          };
+
+          tryNext();
+        });
+      }
+
+      function loadVideoWithFallback(video, paths, timeoutMs = 15000) {
+        return new Promise((resolve, reject) => {
+          let index = 0;
+
+          const tryNext = () => {
+            if (index >= paths.length) {
+              reject(new Error("Failed to load video candidates"));
+              return;
+            }
+
+            const path = paths[index++];
+            const timer = setTimeout(() => {
+              cleanup();
+              tryNext();
+            }, timeoutMs);
+
+            const onLoaded = () => {
+              clearTimeout(timer);
+              cleanup();
+              resolve(path);
+            };
+
+            const onError = () => {
+              clearTimeout(timer);
+              cleanup();
+              tryNext();
+            };
+
+            const cleanup = () => {
+              video.removeEventListener("loadeddata", onLoaded);
+              video.removeEventListener("error", onError);
+            };
+
+            video.addEventListener("loadeddata", onLoaded);
+            video.addEventListener("error", onError);
+            video.src = encodeURI(path);
+            video.load();
+          };
+
+          tryNext();
+        });
+      }
+
+      function attachSplitter(stage, splitter) {
+        let dragging = false;
+
+        splitter.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
+          dragging = true;
+          splitter.setPointerCapture(event.pointerId);
+          setSplitFromClientX(stage, splitter, event.clientX);
+        });
+
+        splitter.addEventListener("pointermove", (event) => {
+          if (!dragging) {
+            return;
+          }
+
+          event.preventDefault();
+          setSplitFromClientX(stage, splitter, event.clientX);
+        });
+
+        const stopDragging = (event) => {
+          if (!dragging) {
+            return;
+          }
+
+          dragging = false;
+          if (event && splitter.hasPointerCapture(event.pointerId)) {
+            splitter.releasePointerCapture(event.pointerId);
+          }
+        };
+
+        splitter.addEventListener("pointerup", stopDragging);
+        splitter.addEventListener("pointercancel", stopDragging);
+        splitter.addEventListener("lostpointercapture", () => {
+          dragging = false;
+        });
+
+        splitter.addEventListener("keydown", (event) => {
+          const current =
+            Number(splitter.getAttribute("aria-valuenow") || "50") / 100;
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            setStageSplit(stage, splitter, current - 0.02);
+            return;
+          }
+
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            setStageSplit(stage, splitter, current + 0.02);
+          }
+        });
+      }
+
+      function getVideoCandidates(sceneName, side) {
+        return [`${sceneBase}/${sceneName}/${side}.mp4`];
+      }
+
+      async function loadScene(sceneName) {
+        const token = ++activeToken;
+        sceneSelect.disabled = true;
+        setStatus("Loading comparisons...");
+
+        sceneImage.alt = `${sceneName} image`;
+        beforeCompareImage.alt = `${sceneName} before image`;
+        afterCompareImage.alt = `${sceneName} after image`;
+
+        try {
+          await Promise.all([
+            loadImageWithFallback(sceneImage, [
+              `${sceneBase}/${sceneName}/img.jpg`,
+            ]),
+            loadImageWithFallback(beforeCompareImage, [
+              `${sceneBase}/${sceneName}/before.jpg`,
+            ]),
+            loadImageWithFallback(afterCompareImage, [
+              `${sceneBase}/${sceneName}/after.jpg`,
+            ]),
+            loadVideoWithFallback(
+              beforeCompareVideo,
+              getVideoCandidates(sceneName, "before"),
+            ),
+            loadVideoWithFallback(
+              afterCompareVideo,
+              getVideoCandidates(sceneName, "after"),
+            ),
+          ]);
+
+          if (token !== activeToken) {
+            return;
+          }
+
+          updateSceneAspectFromImage();
+          beforeCompareVideo.currentTime = 0;
+          afterCompareVideo.currentTime = 0;
+          beforeCompareVideo.play().catch(() => {});
+          afterCompareVideo.play().catch(() => {});
+          setStatus("Ready");
+        } catch (error) {
+          console.error(error);
+          if (token !== activeToken) {
+            return;
+          }
+
+          setStatus("Failed to load scene media");
+        } finally {
+          if (token === activeToken) {
+            sceneSelect.disabled = false;
+          }
+        }
+      }
+
+      document.querySelectorAll("[data-empty-link='true']").forEach((link) => {
+        const href = (link.getAttribute("href") || "").trim();
+        if (!href) {
+          link.classList.add("is-empty-link");
+          link.addEventListener("click", (event) => event.preventDefault());
+        }
+      });
+
+      SCENES.forEach((sceneName) => {
+        const option = document.createElement("option");
+        option.value = sceneName;
+        option.textContent = sceneName;
+        sceneSelect.appendChild(option);
+      });
+
+      sceneSelect.value = SCENES[0];
+
+      sceneSelect.addEventListener("change", () => {
+        loadScene(sceneSelect.value);
+      });
+
+      attachSplitter(imageCompareStage, imageCompareSplitter);
+      attachSplitter(videoCompareStage, videoCompareSplitter);
+      setStageSplit(imageCompareStage, imageCompareSplitter, 0.5);
+      setStageSplit(videoCompareStage, videoCompareSplitter, 0.5);
+      loadScene(sceneSelect.value);
+
+      const SAMPLING_SCENES = [
+        {
+          value: "Arc_de_Triomphe_de_l'E\u0301toile",
+          label: "Arc de Triomphe de l'Etoile",
+        },
+        {
+          value: "Old_Town_Hall_(Prague)",
+          label: "Old Town Hall (Prague)",
+        },
+        {
+          value: "Stavropoleos_Church",
+          label: "Stavropoleos Church",
+        },
+      ];
+      const samplingBase = "material/sampling";
+
+      const simSlides = Array.from(document.querySelectorAll(".sim-slide"));
+      const simPrev = document.getElementById("simPrev");
+      const simNext = document.getElementById("simNext");
+      const simSceneSelect = document.getElementById("simSceneSelect");
+      const simStepPrev = document.getElementById("simStepPrev");
+      const simStepNext = document.getElementById("simStepNext");
+      const simPlayBtn = document.getElementById("simPlayBtn");
+      const simLoadStatus = document.getElementById("simLoadStatus");
+      const simDots = document.getElementById("simDots");
+      const simStepBadge = document.getElementById("simStepBadge");
+
+      let simCurrentSlide = 0;
+      let simStep = 1;
+      let simAutoPlayTimer = null;
+
+      function buildSamplingPath(sceneName, imageKey) {
+        if (imageKey === "step") {
+          return `${samplingBase}/${sceneName}/step${simStep}.jpeg`;
+        }
+
+        return `${samplingBase}/${sceneName}/${imageKey}.png`;
+      }
+
+      function setSimStatus(text) {
+        simLoadStatus.textContent = text;
+      }
+
+      function stopStepAutoplay() {
+        if (simAutoPlayTimer) {
+          window.clearInterval(simAutoPlayTimer);
+          simAutoPlayTimer = null;
+        }
+
+        simPlayBtn.textContent = "Auto-play";
+      }
+
+      function startStepAutoplay() {
+        if (simAutoPlayTimer) {
+          return;
+        }
+
+        simPlayBtn.textContent = "Pause";
+        simAutoPlayTimer = window.setInterval(() => {
+          simStep = (simStep % 8) + 1;
+          updateSamplingImages();
+        }, 850);
+      }
+
+      function updateStepControls() {
+        if (simCurrentSlide !== 3) {
+          stopStepAutoplay();
+          return;
+        }
+
+        // Entering slide 3 should always restart from frame 1 and auto-play.
+        simStep = 1;
+        updateSamplingImages();
+        stopStepAutoplay();
+        startStepAutoplay();
+      }
+
+      function updateDotState() {
+        Array.from(simDots.querySelectorAll(".sim-dot")).forEach(
+          (dot, index) => {
+            dot.classList.toggle("active", index === simCurrentSlide);
+          },
+        );
+      }
+
+      function getTransitionShareKey(fromIndex, toIndex) {
+        const key = `${fromIndex}-${toIndex}`;
+        const transitionMap = {
+          "0-1": "init",
+          "1-0": "init",
+          "1-2": "random_samples",
+          "2-1": "random_samples",
+          "2-3": "steiner_tree",
+          "3-2": "steiner_tree",
+        };
+
+        return transitionMap[key] || null;
+      }
+
+      function animateSharedImageTransition(fromSlide, toSlide, targetKey) {
+        if (!targetKey) {
+          return;
+        }
+
+        const fromShared = Array.from(
+          fromSlide.querySelectorAll("[data-share-key]"),
+        );
+        const toShared = Array.from(
+          toSlide.querySelectorAll("[data-share-key]"),
+        );
+        if (!fromShared.length || !toShared.length) {
+          return;
+        }
+
+        const fromByKey = new Map(
+          fromShared.map((node) => [node.getAttribute("data-share-key"), node]),
+        );
+        const pairs = toShared
+          .map((node) => {
+            const key = node.getAttribute("data-share-key");
+            return {
+              key,
+              fromNode: fromByKey.get(key),
+              toNode: node,
+            };
+          })
+          .filter(
+            (item) => item.key === targetKey && item.fromNode && item.toNode,
+          );
+
+        pairs.forEach(({ fromNode, toNode }) => {
+          const fromImg = fromNode.querySelector("img");
+          const toImg = toNode.querySelector("img");
+          if (!fromImg || !toImg || !fromImg.currentSrc) {
+            return;
+          }
+
+          toNode.classList.add("shared-highlight");
+          window.setTimeout(() => {
+            toNode.classList.remove("shared-highlight");
+          }, 520);
+        });
+      }
+
+      function showSlide(targetIndex) {
+        const fromIndex = simCurrentSlide;
+        const nextIndex =
+          ((targetIndex % simSlides.length) + simSlides.length) %
+          simSlides.length;
+        if (nextIndex === simCurrentSlide) {
+          return;
+        }
+
+        const fromSlide = simSlides[simCurrentSlide];
+        const toSlide = simSlides[nextIndex];
+        toSlide.classList.add("active");
+        const transitionKey = getTransitionShareKey(fromIndex, nextIndex);
+        animateSharedImageTransition(fromSlide, toSlide, transitionKey);
+        fromSlide.classList.remove("active");
+        simCurrentSlide = nextIndex;
+
+        updateStepControls();
+        updateDotState();
+      }
+
+      async function updateSamplingImages() {
+        const sceneName = simSceneSelect.value;
+        const targets = Array.from(
+          document.querySelectorAll("[data-image-key]"),
+        );
+        let hasLoadError = false;
+
+        simStepBadge.textContent = `Greedy step ${simStep}`;
+        setSimStatus("Loading scene media...");
+
+        await Promise.all(
+          targets.map(
+            (img) =>
+              new Promise((resolve) => {
+                const imageKey = img.getAttribute("data-image-key");
+                const nextPath = buildSamplingPath(sceneName, imageKey);
+                const done = () => {
+                  img.removeEventListener("load", done);
+                  img.removeEventListener("error", fail);
+                  resolve();
+                };
+                const fail = () => {
+                  hasLoadError = true;
+                  done();
+                };
+
+                img.addEventListener("load", done, { once: true });
+                img.addEventListener("error", fail, { once: true });
+                img.src = encodeURI(nextPath);
+              }),
+          ),
+        );
+
+        setSimStatus(
+          hasLoadError ? "Some images are missing for this scene." : "Ready",
+        );
+      }
+
+      SAMPLING_SCENES.forEach((scene) => {
+        const option = document.createElement("option");
+        option.value = scene.value;
+        option.textContent = scene.label;
+        simSceneSelect.appendChild(option);
+      });
+
+      simSlides.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.className = "sim-dot";
+        dot.type = "button";
+        dot.setAttribute("aria-label", `Go to slide ${index + 1}`);
+        dot.addEventListener("click", () => showSlide(index));
+        simDots.appendChild(dot);
+      });
+
+      simPrev.addEventListener("click", () => showSlide(simCurrentSlide - 1));
+      simNext.addEventListener("click", () => showSlide(simCurrentSlide + 1));
+
+      simSceneSelect.addEventListener("change", () => {
+        updateSamplingImages();
+      });
+
+      simStepPrev.addEventListener("click", () => {
+        simStep = ((simStep + 6) % 8) + 1;
+        updateSamplingImages();
+      });
+
+      simStepNext.addEventListener("click", () => {
+        simStep = (simStep % 8) + 1;
+        updateSamplingImages();
+      });
+
+      simPlayBtn.addEventListener("click", () => {
+        if (simAutoPlayTimer) {
+          stopStepAutoplay();
+          return;
+        }
+
+        startStepAutoplay();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.target &&
+          (event.target.tagName === "INPUT" ||
+            event.target.tagName === "TEXTAREA" ||
+            event.target.tagName === "SELECT")
+        ) {
+          return;
+        }
+
+        if (event.key === "ArrowLeft") {
+          showSlide(simCurrentSlide - 1);
+        }
+
+        if (event.key === "ArrowRight") {
+          showSlide(simCurrentSlide + 1);
+        }
+      });
+
+      simSceneSelect.value = SAMPLING_SCENES[0].value;
+      updateDotState();
+      updateStepControls();
+      updateSamplingImages();
+
+      const RESULTS_PER_PAGE = 2;
+      const RESULTS_SCENES = [
+        { id: 217903, sceneName: "Praca_XV_(Rio_de_Janeiro)" },
+        { id: 92597, sceneName: "Fontanna_Potop" },
+        { id: 114263, sceneName: "Hongyureung" },
+        {
+          id: 376206,
+          sceneName: "Hervormde_Kerk_(Sint_Anthonissepolder)",
+        },
+        { id: 249105, sceneName: "Landguard_Fort" },
+        { id: 218190, sceneName: "Youngstorget" },
+        {
+          id: 143422,
+          sceneName: "National_War_Memorial_(South_Australia)",
+        },
+        { id: 181955, sceneName: "Palace_in_Borynia" },
+        { id: 451178, sceneName: "St_Marys_Church_Rhuddlan" },
+        { id: 41481, sceneName: "Chapelle_de_Lorette_a_Fribourg" },
+        { id: 269606, sceneName: "Faro_de_Toston" },
+        { id: 212995, sceneName: "Honkoji_(Kota)" },
+        { id: 346591, sceneName: "St_Edithas_Church_Tamworth" },
+        {
+          id: 27704,
+          sceneName: "Church_of_Saint_Stanislaus_in_Mahilou",
+        },
+        { id: 13412, sceneName: "Grand_Pont_Lausanne" },
+        { id: 68834, sceneName: "Royal_Exchange_Manchester" },
+        {
+          id: 91964,
+          sceneName: "Fuente_de_la_Diana_Cazadora_(Mexico_City)",
+        },
+        {
+          id: 328317,
+          sceneName: "St_Nicholas_Cathedral_in_Pokrovsky_Monastery_(Kyiv)",
+        },
+      ];
+
+      function buildResultAssets(scene) {
+        const suffix = String(scene.id).slice(-3).padStart(3, "0");
+
+        return {
+          ...scene,
+          googleTopDown: `material/results/${scene.id}.png`,
+          inputImages: `material/results/${suffix}_input.png`,
+          pretrainedVideo: `material/results/${suffix}.mp4`,
+          oursVideo: `material/results/${suffix}_ft.mp4`,
+        };
+      }
+
+      function formatSceneTitle(scene) {
+        return `${scene.sceneName.replace(/_/g, " ")} (MegaScenes_id: ${scene.id})`;
+      }
+
+      function formatPiCaption(text) {
+        return text.replace(/π³/g, '<span class="pi-inline">π³</span>');
+      }
+
+      function setupExperimentalResults() {
+        const resultsRoot = document.getElementById("resultsRoot");
+        const resultsPager = document.getElementById("resultsPager");
+        const resultsPrevPage = document.getElementById("resultsPrevPage");
+        const resultsNextPage = document.getElementById("resultsNextPage");
+        const resultsControlsPager = document.getElementById(
+          "resultsControlsPager",
+        );
+
+        if (
+          !resultsRoot ||
+          !resultsPager ||
+          !resultsPrevPage ||
+          !resultsNextPage ||
+          !resultsControlsPager
+        ) {
+          return;
+        }
+
+        const entries = RESULTS_SCENES.map(buildResultAssets);
+        const totalPages = Math.ceil(entries.length / RESULTS_PER_PAGE);
+        let currentPage = 0;
+
+        function updateTopPager() {
+          resultsControlsPager.textContent = `Page ${currentPage + 1} / ${totalPages} (2 scenes per page)`;
+        }
+
+        function playCurrentPageVideos() {
+          const allVideos = resultsRoot.querySelectorAll("video");
+          allVideos.forEach((video) => {
+            try {
+              video.pause();
+              video.currentTime = 0;
+            } catch (_error) {}
+          });
+
+          const visibleVideos = resultsRoot.querySelectorAll(".results-page video");
+          visibleVideos.forEach((video) => {
+            video.muted = true;
+            video.setAttribute("muted", "");
+            video.playsInline = true;
+            video.setAttribute("playsinline", "");
+            video.play().catch(() => {});
+          });
+        }
+
+        function renderBottomPager() {
+          resultsPager.innerHTML = "";
+
+          const prev = document.createElement("button");
+          prev.className = "results-nav-btn";
+          prev.type = "button";
+          prev.textContent = "Prev";
+          prev.disabled = currentPage === 0;
+          prev.addEventListener("click", () => renderPage(currentPage - 1));
+
+          const info = document.createElement("div");
+          info.className = "results-pager-info";
+          info.textContent = `Page ${currentPage + 1} / ${totalPages}`;
+
+          const next = document.createElement("button");
+          next.className = "results-nav-btn";
+          next.type = "button";
+          next.textContent = "Next";
+          next.disabled = currentPage === totalPages - 1;
+          next.addEventListener("click", () => renderPage(currentPage + 1));
+
+          resultsPager.appendChild(prev);
+          resultsPager.appendChild(info);
+          resultsPager.appendChild(next);
+        }
+
+        function createMediaCard(src, caption, mediaType) {
+          const card = document.createElement("figure");
+          card.className = "results-media-card";
+
+          const mediaWrap = document.createElement("div");
+          mediaWrap.className = "results-media";
+
+          if (mediaType === "video") {
+            const video = document.createElement("video");
+            video.src = src;
+            video.muted = true;
+            video.setAttribute("muted", "");
+            video.loop = true;
+            video.playsInline = true;
+            video.setAttribute("playsinline", "");
+            video.preload = "metadata";
+            mediaWrap.appendChild(video);
+          } else {
+            const image = document.createElement("img");
+            image.src = src;
+            image.loading = "lazy";
+            image.alt = caption;
+            mediaWrap.appendChild(image);
+          }
+
+          const captionEl = document.createElement("figcaption");
+          captionEl.className = "results-caption";
+          captionEl.innerHTML = formatPiCaption(caption);
+
+          card.appendChild(mediaWrap);
+          card.appendChild(captionEl);
+          return card;
+        }
+
+        function renderPage(pageIndex) {
+          currentPage = Math.max(0, Math.min(pageIndex, totalPages - 1));
+          resultsRoot.innerHTML = "";
+
+          const page = document.createElement("div");
+          page.className = "results-page";
+
+          const start = currentPage * RESULTS_PER_PAGE;
+          const subset = entries.slice(start, start + RESULTS_PER_PAGE);
+
+          subset.forEach((scene) => {
+            const sceneCard = document.createElement("article");
+            sceneCard.className = "results-scene";
+
+            const title = document.createElement("div");
+            title.className = "results-scene-title";
+            title.textContent = formatSceneTitle(scene);
+            sceneCard.appendChild(title);
+
+            const sceneGrid = document.createElement("div");
+            sceneGrid.className = "results-scene-grid";
+            sceneGrid.appendChild(
+              createMediaCard(scene.inputImages, "Input Images", "image"),
+            );
+            sceneGrid.appendChild(
+              createMediaCard(
+                scene.pretrainedVideo,
+                "Pretrained π³",
+                "video",
+              ),
+            );
+            sceneGrid.appendChild(
+              createMediaCard(
+                scene.oursVideo,
+                "Ours",
+                "video",
+              ),
+            );
+            sceneGrid.appendChild(
+              createMediaCard(scene.googleTopDown, "Google Earth", "image"),
+            );
+
+            sceneCard.appendChild(sceneGrid);
+
+            page.appendChild(sceneCard);
+          });
+
+          resultsRoot.appendChild(page);
+
+          updateTopPager();
+          renderBottomPager();
+          resultsPrevPage.disabled = currentPage === 0;
+          resultsNextPage.disabled = currentPage === totalPages - 1;
+          playCurrentPageVideos();
+        }
+
+        resultsPrevPage.addEventListener("click", () => {
+          renderPage(currentPage - 1);
+        });
+        resultsNextPage.addEventListener("click", () => {
+          renderPage(currentPage + 1);
+        });
+
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) {
+            playCurrentPageVideos();
+          }
+        });
+
+        renderPage(0);
+      }
+
+      setupExperimentalResults();
+
+      function setupSimRequirementPopups() {
+        const triggers = Array.from(
+          document.querySelectorAll(".sim-req-trigger[data-popup-target]"),
+        );
+        if (!triggers.length) {
+          return;
+        }
+
+        const pairs = triggers
+          .map((trigger) => ({
+            trigger,
+            popup: document.getElementById(trigger.dataset.popupTarget),
+          }))
+          .filter((pair) => pair.popup);
+
+        if (!pairs.length) {
+          return;
+        }
+
+        const margin = 12;
+
+        const positionPopup = (trigger, popup) => {
+          const rect = trigger.getBoundingClientRect();
+          const popupWidth = Math.min(460, window.innerWidth - margin * 2);
+          popup.style.width = `${popupWidth}px`;
+
+          let left = rect.left;
+          if (left + popupWidth > window.innerWidth - margin) {
+            left = window.innerWidth - margin - popupWidth;
+          }
+          if (left < margin) {
+            left = margin;
+          }
+          popup.style.left = `${left}px`;
+
+          popup.style.top = `${rect.bottom + 8}px`;
+          const popupRect = popup.getBoundingClientRect();
+          if (popupRect.bottom > window.innerHeight - margin) {
+            const aboveTop = rect.top - popupRect.height - 8;
+            popup.style.top = `${Math.max(margin, aboveTop)}px`;
+          }
+        };
+
+        const closeAll = () => {
+          pairs.forEach(({ trigger, popup }) => {
+            popup.hidden = true;
+            trigger.setAttribute("aria-expanded", "false");
+          });
+        };
+
+        pairs.forEach(({ trigger, popup }) => {
+          trigger.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const shouldOpen = popup.hidden;
+            closeAll();
+            if (!shouldOpen) {
+              return;
+            }
+
+            popup.hidden = false;
+            trigger.setAttribute("aria-expanded", "true");
+            positionPopup(trigger, popup);
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          const inside = pairs.some(
+            ({ trigger, popup }) =>
+              trigger.contains(event.target) || popup.contains(event.target),
+          );
+          if (!inside) {
+            closeAll();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeAll();
+          }
+        });
+
+        const repositionVisible = () => {
+          pairs.forEach(({ trigger, popup }) => {
+            if (!popup.hidden) {
+              positionPopup(trigger, popup);
+            }
+          });
+        };
+
+        window.addEventListener("resize", repositionVisible);
+        window.addEventListener("scroll", repositionVisible, true);
+      }
+
+      setupSimRequirementPopups();
+
+      function setupResultsNotePopup() {
+        const trigger = document.getElementById("resultsNoteTrigger");
+        const popup = document.getElementById("resultsNotePopup");
+
+        if (!trigger || !popup) {
+          return;
+        }
+
+        const positionPopup = () => {
+          const margin = 12;
+          const rect = trigger.getBoundingClientRect();
+          const popupWidth = Math.min(420, window.innerWidth - margin * 2);
+          popup.style.width = `${popupWidth}px`;
+
+          let left = rect.left;
+          if (left + popupWidth > window.innerWidth - margin) {
+            left = window.innerWidth - margin - popupWidth;
+          }
+          if (left < margin) {
+            left = margin;
+          }
+          popup.style.left = `${left}px`;
+
+          popup.style.top = `${rect.bottom + 8}px`;
+          const popupRect = popup.getBoundingClientRect();
+          if (popupRect.bottom > window.innerHeight - margin) {
+            const aboveTop = rect.top - popupRect.height - 8;
+            popup.style.top = `${Math.max(margin, aboveTop)}px`;
+          }
+        };
+
+        const closePopup = () => {
+          popup.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+        };
+
+        const openPopup = () => {
+          popup.hidden = false;
+          trigger.setAttribute("aria-expanded", "true");
+          positionPopup();
+        };
+
+        trigger.addEventListener("click", (event) => {
+          event.stopPropagation();
+          if (popup.hidden) {
+            openPopup();
+          } else {
+            closePopup();
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!popup.hidden && !popup.contains(event.target) && event.target !== trigger) {
+            closePopup();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !popup.hidden) {
+            closePopup();
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          if (!popup.hidden) {
+            positionPopup();
+          }
+        });
+
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!popup.hidden) {
+              positionPopup();
+            }
+          },
+          true,
+        );
+      }
+
+      setupResultsNotePopup();
+    </script>
+  </body>
 </html>

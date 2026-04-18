@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Church favicon">
+  <rect width="64" height="64" rx="12" fill="#fff4e8"/>
+  <rect x="12" y="50" width="40" height="6" fill="#5a4634"/>
+  <path d="M18 50V30l14-9 14 9v20H18z" fill="#c58b52"/>
+  <rect x="28" y="38" width="8" height="12" fill="#fff4e8"/>
+  <rect x="30" y="12" width="4" height="14" fill="#5a4634"/>
+  <path d="M24 26h16l-8-10-8 10z" fill="#5a4634"/>
+  <rect x="43" y="18" width="7" height="32" fill="#b77a41"/>
+  <path d="M40 20h13l-6.5-8L40 20z" fill="#5a4634"/>
+  <rect x="45" y="36" width="3" height="6" fill="#fff4e8"/>
+</svg>
