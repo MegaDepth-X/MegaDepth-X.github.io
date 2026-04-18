@@ -1671,7 +1671,13 @@
 
           <figure class="data-compare-item">
             <div class="data-compare-media">
-              <video muted loop autoplay playsinline preload="metadata">
+              <video
+                id="megascenesVideo"
+                muted
+                autoplay
+                playsinline
+                preload="metadata"
+              >
                 <source src="material/depth/megascenes.mp4" type="video/mp4" />
               </video>
             </div>
@@ -1680,7 +1686,13 @@
 
           <figure class="data-compare-item">
             <div class="data-compare-media">
-              <video muted loop autoplay playsinline preload="metadata">
+              <video
+                id="megadepthxVideo"
+                muted
+                autoplay
+                playsinline
+                preload="metadata"
+              >
                 <source src="material/depth/megadepthx.mp4" type="video/mp4" />
               </video>
             </div>
@@ -3398,6 +3410,31 @@
         );
       }
 
+      function setupDelayedLoopVideos(videoIds, delayMs = 500) {
+        videoIds.forEach((videoId) => {
+          const video = document.getElementById(videoId);
+          if (!(video instanceof HTMLVideoElement)) {
+            return;
+          }
+
+          let restartTimer = null;
+          video.loop = false;
+
+          video.addEventListener("ended", () => {
+            if (restartTimer !== null) {
+              window.clearTimeout(restartTimer);
+            }
+
+            restartTimer = window.setTimeout(() => {
+              restartTimer = null;
+              video.currentTime = 0;
+              video.play().catch(() => {});
+            }, delayMs);
+          });
+        });
+      }
+
+      setupDelayedLoopVideos(["megascenesVideo", "megadepthxVideo"], 750);
       setupResultsNotePopup();
     </script>
   </body>
