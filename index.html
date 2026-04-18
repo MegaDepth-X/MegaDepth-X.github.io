@@ -78,9 +78,17 @@
 
       .authors {
         margin-top: 14px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px 18px;
         font-size: clamp(1rem, 1.3vw, 1.24rem);
         font-weight: 600;
         letter-spacing: 0.002em;
+      }
+
+      .author-item {
+        white-space: nowrap;
       }
 
       .authors a {
@@ -94,8 +102,16 @@
 
       .affils {
         margin-top: 7px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px 16px;
         font-size: clamp(0.97rem, 1.2vw, 1.14rem);
         color: var(--text-soft);
+      }
+
+      .affil-item {
+        white-space: nowrap;
       }
 
       .corr-note {
@@ -1372,19 +1388,68 @@
         text-decoration: none;
       }
 
+      @media (max-width: 900px) {
+        .sim-analysis-table-wrap {
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .sim-analysis-table {
+          min-width: 760px;
+          font-size: 0.75rem;
+        }
+
+        .sim-analysis-table thead th,
+        .sim-analysis-table tbody td {
+          padding: 4px 3px;
+        }
+
+        .sim-analysis-table tbody td.sim-method {
+          min-width: 170px;
+        }
+      }
+
       @media (max-width: 760px) {
         .paper {
-          margin-top: 14px;
-          padding: 14px;
-          border-radius: 14px;
+          width: calc(100% - 16px);
+          margin: 10px auto 36px;
+          padding: 12px;
+          border-radius: 12px;
         }
 
         .title {
           font-size: clamp(1.6rem, 7.6vw, 2rem);
         }
 
+        .authors {
+          margin-top: 10px;
+          gap: 5px 10px;
+          font-size: clamp(0.95rem, 4.5vw, 1.05rem);
+        }
+
+        .affils {
+          gap: 4px 10px;
+          font-size: clamp(0.89rem, 3.8vw, 0.98rem);
+        }
+
+        .venue {
+          font-size: clamp(1.02rem, 5vw, 1.2rem);
+        }
+
+        .btn-row {
+          gap: 8px;
+        }
+
         .subsection {
           padding: 12px;
+        }
+
+        .abstract-text,
+        .subsection-text {
+          text-align: left;
+        }
+
+        .tldr-box {
+          padding: 10px 12px;
         }
 
         .dense-head,
@@ -1403,7 +1468,10 @@
         }
 
         .link-btn {
-          min-width: 96px;
+          min-width: 0;
+          max-width: calc(50% - 8px);
+          flex: 1 1 calc(50% - 8px);
+          min-height: 42px;
           font-size: 0.96rem;
         }
 
@@ -1412,12 +1480,16 @@
         }
 
         .sim-slide {
-          padding-bottom: 122px;
+          padding-bottom: 14px;
         }
 
         .sim-card {
           border-radius: 16px;
-          padding: 10px 8px;
+          padding: 10px 6px 8px;
+        }
+
+        .sim-stage {
+          border-radius: 16px;
         }
 
         .sim-carousel {
@@ -1444,13 +1516,37 @@
         }
 
         .sim-stage-footer {
-          bottom: 8px;
+          position: static;
+          left: auto;
+          right: auto;
+          bottom: auto;
+          margin-top: 10px;
+          padding: 0 4px 4px;
           flex-direction: column;
-          gap: 7px;
+          gap: 8px;
+        }
+
+        .sim-stage-footer label {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        .sim-stage-footer select {
+          margin-left: 0;
+          max-width: min(280px, 100%);
         }
 
         .sim-step-toolbar {
-          justify-content: space-between;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+
+        .sim-step-chip {
+          min-width: 84px;
         }
 
         .sim-mid-note,
@@ -1466,12 +1562,44 @@
           grid-template-columns: 1fr;
         }
 
+        .viewer-toolbar {
+          gap: 8px;
+        }
+
+        .viewer-toolbar label {
+          width: 100%;
+          text-align: left;
+        }
+
+        .viewer-toolbar select {
+          margin-left: 0;
+          margin-top: 6px;
+          width: 100%;
+        }
+
         .results-controls {
           flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
         }
 
         .results-controls .spacer {
           display: none;
+        }
+
+        .results-page-info {
+          width: 100%;
+          text-align: center;
+          font-size: 0.92rem;
+        }
+
+        .results-container {
+          padding: 10px;
+        }
+
+        .results-nav-btn {
+          min-height: 38px;
+          padding: 6px 12px;
         }
 
         .badsfm-row {
@@ -1490,6 +1618,33 @@
 
         .results-scene-grid {
           grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .results-scene {
+          padding: 10px;
+        }
+
+        .results-scene-title {
+          font-size: 0.97rem;
+          line-height: 1.35;
+        }
+
+        .results-media {
+          aspect-ratio: 16 / 10;
+        }
+
+        .results-pager {
+          flex-wrap: wrap;
+        }
+
+        .sim-analysis-table {
+          min-width: 680px;
+          font-size: 0.72rem;
+        }
+
+        .sim-analysis-table tbody td.sim-method {
+          min-width: 150px;
         }
 
         .results-note-popup {
@@ -1500,6 +1655,28 @@
           width: min(330px, calc(100vw - 20px));
         }
       }
+
+      @media (max-width: 480px) {
+        .author-item,
+        .affil-item {
+          width: 100%;
+          text-align: center;
+        }
+
+        .link-btn {
+          max-width: 100%;
+          flex-basis: 100%;
+        }
+
+        .sim-step-arrow,
+        .sim-step-play {
+          min-height: 30px;
+        }
+
+        .sim-dots {
+          row-gap: 6px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1507,40 +1684,52 @@
       <h1 class="title">Long-Tail Internet Photo Reconstruction</h1>
 
       <div class="authors">
-        <a
-          href="https://y-u-a-n-l-i.github.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Yuan Li</a
-        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
-        <a
-          href="https://kam1107.github.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Yuanbo Xiangli</a
-        ><sup>1&dagger;</sup> &nbsp;&nbsp;&nbsp;
-        <a
-          href="https://www.hadarelor.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Hadar Averbuch-Elor</a
-        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
-        <a
-          href="https://www.cs.cornell.edu/~snavely/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Noah Snavely</a
-        ><sup>1</sup> &nbsp;&nbsp;&nbsp;
-        <a
-          href="https://ruojincai.github.io/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Ruojin Cai</a
-        ><sup>2&dagger;</sup>
+        <span class="author-item"
+          ><a
+            href="https://y-u-a-n-l-i.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Yuan Li</a
+          ><sup>1</sup></span
+        >
+        <span class="author-item"
+          ><a
+            href="https://kam1107.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Yuanbo Xiangli</a
+          ><sup>1&dagger;</sup></span
+        >
+        <span class="author-item"
+          ><a
+            href="https://www.hadarelor.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Hadar Averbuch-Elor</a
+          ><sup>1</sup></span
+        >
+        <span class="author-item"
+          ><a
+            href="https://www.cs.cornell.edu/~snavely/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Noah Snavely</a
+          ><sup>1</sup></span
+        >
+        <span class="author-item"
+          ><a
+            href="https://ruojincai.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Ruojin Cai</a
+          ><sup>2&dagger;</sup></span
+        >
       </div>
       <div class="affils">
-        <sup>1</sup>Cornell University &nbsp;&nbsp;&nbsp; <sup>2</sup>Kempner
-        Institute, Harvard University
+        <span class="affil-item"><sup>1</sup>Cornell University</span>
+        <span class="affil-item"
+          ><sup>2</sup>Kempner Institute, Harvard University</span
+        >
       </div>
       <div class="corr-note">&dagger; Corresponding authors</div>
       <div class="venue">CVPR2026</div>
