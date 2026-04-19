@@ -1010,7 +1010,8 @@
       }
 
       .sim-analysis-table-wrap {
-        width: 100%;
+        width: min(900px, 100%);
+        margin: 0 auto;
         border: 1px solid #ead8c2;
         background: #ffffff;
         overflow-x: auto;
@@ -1018,17 +1019,30 @@
 
       .sim-analysis-table {
         width: 100%;
-        min-width: 980px;
+        min-width: 200px;
         border-collapse: collapse;
+        table-layout: fixed;
         color: #2f241a;
-        font-size: 0.82rem;
+        font-size: 0.75rem;
+      }
+
+      .sim-analysis-table col.sim-col-difficulty {
+        width: 32px;
+      }
+
+      .sim-analysis-table col.sim-col-method {
+        width: 32px;
+      }
+
+      .sim-analysis-table col.sim-col-metric {
+        width: 16px;
       }
 
       .sim-analysis-table thead th {
         background: #f8ebdd;
         border-bottom: 1px solid #decab2;
         text-align: center;
-        padding: 6px 4px;
+        padding: 3px 2px;
         font-weight: 700;
       }
 
@@ -1039,14 +1053,15 @@
 
       .sim-analysis-table tbody td {
         border-top: 1px solid #efdfcb;
-        padding: 5px 4px;
+        padding: 3px 2px;
         text-align: center;
         white-space: nowrap;
       }
 
       .sim-analysis-table tbody td.sim-method {
         text-align: left;
-        min-width: 220px;
+        width: 65px;
+        min-width: 65px;
         white-space: normal;
       }
 
@@ -1388,23 +1403,48 @@
         text-decoration: none;
       }
 
+      .pi-link,
+      .vggt-link {
+        color: inherit;
+        text-decoration: none;
+        font-weight: inherit;
+      }
+
+      .pi-link:hover,
+      .vggt-link:hover {
+        text-decoration: none;
+      }
+
       @media (max-width: 900px) {
         .sim-analysis-table-wrap {
           -webkit-overflow-scrolling: touch;
         }
 
         .sim-analysis-table {
-          min-width: 760px;
-          font-size: 0.75rem;
+          min-width: 560px;
+          font-size: 0.7rem;
+        }
+
+        .sim-analysis-table col.sim-col-difficulty {
+          width: 32px;
+        }
+
+        .sim-analysis-table col.sim-col-method {
+          width: 32px;
+        }
+
+        .sim-analysis-table col.sim-col-metric {
+          width: 32px;
         }
 
         .sim-analysis-table thead th,
         .sim-analysis-table tbody td {
-          padding: 4px 3px;
+          padding: 2px 2px;
         }
 
         .sim-analysis-table tbody td.sim-method {
-          min-width: 170px;
+          width: 32px;
+          min-width: 32px;
         }
       }
 
@@ -1639,12 +1679,25 @@
         }
 
         .sim-analysis-table {
-          min-width: 680px;
-          font-size: 0.72rem;
+          min-width: 520px;
+          font-size: 0.66rem;
+        }
+
+        .sim-analysis-table col.sim-col-difficulty {
+          width: 24px;
+        }
+
+        .sim-analysis-table col.sim-col-method {
+          width: 24px;
+        }
+
+        .sim-analysis-table col.sim-col-metric {
+          width: 24px;
         }
 
         .sim-analysis-table tbody td.sim-method {
-          min-width: 150px;
+          width: 24px;
+          min-width: 24px;
         }
 
         .results-note-popup {
@@ -1785,9 +1838,12 @@
       </div>
 
       <p class="abstract-text tldr-box">
-        <b>TL;DR:</b> We define long-tail Internet photo reconstruction by an
+        <b>TL;DR:</b> 
+        <!-- We define long-tail Internet photo reconstruction by an
         extremely uneven camera-view distribution, and contribute a new dataset
-        plus a sampling-emulation strategy for this setting.
+        plus a sampling-emulation strategy for this setting. -->
+        Toward general 3D foundation models, we go beyond densely captured imagery to learn from the long tail camera distribution of Internet photo collections.
+        We introduce MegaDepth-X, a large-scale dataset with high-quality 3D supervision, together with sparsity-aware sampling during training, to make the learning possible.
       </p>
 
       <div class="teaser">
@@ -2415,100 +2471,207 @@
 
         <div class="sim-analysis">
           <p class="sim-analysis-text">
-            We compare two finetuning data construction strategies,
-            sparse-aware sampling and random sampling, on our curated
-            evaluation set with two difficulty levels (easy and hard). Overall, finetuning with
-            sparse-aware sampling yields better performance across both levels,
-            with clear gains on camera pose quality and most point map metrics.
+            We compare pretrained baselines and sparse-aware finetuned models
+            for both
+            <a
+              class="pi-link pi-inline"
+              href="https://yyfz.github.io/pi3/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >π³</a
+            >
+            and
+            <a
+              class="vggt-link"
+              href="https://vgg-t.github.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >VGGT</a
+            >
+            on our curated
+            evaluation set with two difficulty levels (easy and hard). Overall,
+            finetuned models consistently outperform their pretrained
+            counterparts, with larger gains on harder, sparser scenes. Metric
+            definitions and evaluation protocol follow
+            <a
+              class="pi-link"
+              href="https://yyfz.github.io/pi3/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >π³</a
+            >.
           </p>
 
           <div class="sim-analysis-table-wrap">
-            <table class="sim-analysis-table" aria-label="Sparse-aware versus random sampling comparison">
+            <table class="sim-analysis-table" aria-label="Pretrained versus sparse-aware finetuned comparison for pi3 and VGGT">
+              <colgroup>
+                <col class="sim-col-difficulty" />
+                <col class="sim-col-method" />
+                <col class="sim-col-metric" span="6" />
+              </colgroup>
               <thead>
                 <tr>
-                  <th rowspan="3">Difficulty</th>
-                  <th rowspan="3">Method</th>
-                  <th colspan="5">Camera Pose Estimation</th>
-                  <th colspan="6">Point Map Estimation</th>
+                  <th rowspan="2">Difficulty</th>
+                  <th rowspan="2">Method</th>
+                  <th colspan="3">Camera Pose Estimation</th>
+                  <th colspan="3">Point Map Estimation</th>
                 </tr>
                 <tr>
-                  <th rowspan="2">RRA@5↑</th>
-                  <th rowspan="2">RTA@5↑</th>
-                  <th rowspan="2">AUC@5↑</th>
-                  <th rowspan="2">MRE↓</th>
-                  <th rowspan="2">MTE↓</th>
-                  <th colspan="2">Acc↓</th>
-                  <th colspan="2">Comp↓</th>
-                  <th colspan="2">NC↑</th>
-                </tr>
-                <tr>
-                  <th>Mean</th>
-                  <th>Med.</th>
-                  <th>Mean</th>
-                  <th>Med.</th>
-                  <th>Mean</th>
-                  <th>Med.</th>
+                  <th>RRA@5↑</th>
+                  <th>RTA@5↑</th>
+                  <th>AUC@5↑</th>
+                  <th>Acc Mean↓</th>
+                  <th>Comp Mean↓</th>
+                  <th>NV Mean↑</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="sim-difficulty" rowspan="2">easy</td>
-                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with sparse-aware sampling</td>
+                  <td class="sim-difficulty" rowspan="4">easy</td>
+                  <td class="sim-method">
+                    pretrained
+                    <a
+                      class="pi-link pi-inline"
+                      href="https://yyfz.github.io/pi3/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >π³</a
+                    >
+                  </td>
+                  <td>88.97</td>
+                  <td>68.79</td>
+                  <td>45.84</td>
+                  <td>0.055</td>
+                  <td>0.039</td>
+                  <td>0.712</td>
+                </tr>
+                <tr>
+                  <td class="sim-method">
+                    finetuned 
+                    <a
+                      class="pi-link pi-inline"
+                      href="https://yyfz.github.io/pi3/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >π³</a
+                    >
+                  </td>
                   <td><b>95.64</b></td>
                   <td><b>76.85</b></td>
                   <td><b>55.58</b></td>
-                  <td><b>1.64</b></td>
-                  <td><b>5.50</b></td>
                   <td><b>0.035</b></td>
-                  <td><b>0.020</b></td>
                   <td><b>0.024</b></td>
-                  <td><b>0.012</b></td>
                   <td><b>0.724</b></td>
-                  <td><b>0.837</b></td>
                 </tr>
                 <tr>
-                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with random sampling</td>
-                  <td>95.08</td>
-                  <td>76.42</td>
-                  <td>55.00</td>
-                  <td>1.78</td>
-                  <td>5.72</td>
-                  <td>0.039</td>
-                  <td>0.021</td>
-                  <td>0.026</td>
-                  <td>0.013</td>
-                  <td>0.720</td>
-                  <td>0.831</td>
+                  <td class="sim-method">
+                    pretrained
+                    <a
+                      class="vggt-link"
+                      href="https://vgg-t.github.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >VGGT</a
+                    >
+                  </td>
+                  <td>84.17</td>
+                  <td>58.47</td>
+                  <td>35.32</td>
+                  <td>0.093</td>
+                  <td>0.055</td>
+                  <td>0.695</td>
+                </tr>
+                <tr>
+                  <td class="sim-method">
+                    finetuned 
+                    <a
+                      class="vggt-link"
+                      href="https://vgg-t.github.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >VGGT</a
+                    >
+                  </td>
+                  <td><b>92.41</b></td>
+                  <td><b>71.12</b></td>
+                  <td><b>48.78</b></td>
+                  <td><b>0.050</b></td>
+                  <td><b>0.033</b></td>
+                  <td><b>0.719</b></td>
                 </tr>
 
                 <tr class="sim-divider">
-                  <td class="sim-difficulty" rowspan="2">hard</td>
-                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with sparse-aware sampling</td>
+                  <td class="sim-difficulty" rowspan="4">hard</td>
+                  <td class="sim-method">
+                    pretrained
+                    <a
+                      class="pi-link pi-inline"
+                      href="https://yyfz.github.io/pi3/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >π³</a
+                    >
+                  </td>
+                  <td>75.31</td>
+                  <td>59.16</td>
+                  <td>36.93</td>
+                  <td>0.101</td>
+                  <td>0.133</td>
+                  <td>0.689</td>
+                </tr>
+                <tr>
+                  <td class="sim-method">
+                    finetuned
+                    <a
+                      class="pi-link pi-inline"
+                      href="https://yyfz.github.io/pi3/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >π³</a
+                    >
+                  </td>
                   <td><b>86.40</b></td>
                   <td><b>71.00</b></td>
                   <td><b>47.93</b></td>
-                  <td><b>5.72</b></td>
-                  <td><b>7.27</b></td>
                   <td><b>0.068</b></td>
-                  <td>0.041</td>
                   <td><b>0.066</b></td>
-                  <td><b>0.041</b></td>
                   <td><b>0.713</b></td>
-                  <td><b>0.818</b></td>
                 </tr>
                 <tr>
-                  <td class="sim-method"><span class="pi-inline">π³</span> finetuned with random sampling</td>
-                  <td>85.93</td>
-                  <td>69.84</td>
-                  <td>47.17</td>
-                  <td>6.53</td>
-                  <td>7.78</td>
-                  <td>0.071</td>
-                  <td><b>0.040</b></td>
-                  <td>0.073</td>
-                  <td>0.045</td>
-                  <td>0.708</td>
-                  <td>0.812</td>
+                  <td class="sim-method">
+                    pretrained
+                    <a
+                      class="vggt-link"
+                      href="https://vgg-t.github.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >VGGT</a
+                    >
+                  </td>
+                  <td>70.98</td>
+                  <td>52.98</td>
+                  <td>29.10</td>
+                  <td>0.149</td>
+                  <td>0.151</td>
+                  <td>0.675</td>
+                </tr>
+                <tr>
+                  <td class="sim-method">
+                    finetuned
+                    <a
+                      class="vggt-link"
+                      href="https://vgg-t.github.io/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >VGGT</a
+                    >
+                  </td>
+                  <td><b>81.07</b></td>
+                  <td><b>65.59</b></td>
+                  <td><b>41.49</b></td>
+                  <td><b>0.089</b></td>
+                  <td><b>0.084</b></td>
+                  <td><b>0.709</b></td>
                 </tr>
               </tbody>
             </table>
@@ -2527,7 +2690,15 @@
         </p>
         <p class="subsection-text">
           For each scene, we show input images, multi-view renderings from
-          pretrained <span class="pi-inline">π³</span> and ours, and Google
+          pretrained
+          <a
+            class="pi-link pi-inline"
+            href="https://yyfz.github.io/pi3/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >π³</a
+          >
+          and ours, and Google
           Earth top-down reference in a single row.
           <span class="results-note-inline">
             <button
@@ -2549,7 +2720,14 @@
               <span class="results-note-title">Note</span>
               <span class="results-note-content"
                 >For a fair comparison, pretrained
-                <span class="pi-inline">π³</span> and ours use the same
+                <a
+                  class="pi-link pi-inline"
+                  href="https://yyfz.github.io/pi3/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >π³</a
+                >
+                and ours use the same
                 confidence threshold in each scene. We also discard predicted
                 camera views that contain too many low-confidence pixels.</span
               >
@@ -3241,7 +3419,10 @@
       }
 
       function formatPiCaption(text) {
-        return text.replace(/π³/g, '<span class="pi-inline">π³</span>');
+        return text.replace(
+          /π³/g,
+          '<a class="pi-link pi-inline" href="https://yyfz.github.io/pi3/" target="_blank" rel="noopener noreferrer">π³</a>',
+        );
       }
 
       function setupExperimentalResults() {
