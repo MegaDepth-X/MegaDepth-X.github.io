@@ -23,6 +23,14 @@
         --btn-bg: #505050;
         --btn-hover: #3a3a3a;
         --btn-text: #ffffff;
+        --recon-x-start: #f1cfbf;
+        --recon-x-mid: #d48758;
+        --recon-x-end: #b76537;
+        --recon-md-start: #edf3f6;
+        --recon-md-mid: #b7c5cf;
+        --recon-md-end: #8595a0;
+        --recon-x-text: #23313a;
+        --recon-md-text: #23313a;
       }
 
       * {
@@ -1009,69 +1017,317 @@
         color: #3f3f3f;
       }
 
-      .sim-analysis-table-wrap {
-        width: min(900px, 100%);
-        margin: 0 auto;
+      .sim-analysis-header {
+        width: min(980px, 100%);
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px 16px;
+        flex-wrap: wrap;
+        text-align: left;
+      }
+
+      .sim-analysis-note {
+        margin: 0;
+        font-size: 0.88rem;
+        line-height: 1.45;
+        color: #5f4a35;
+      }
+
+      .sim-analysis-legend {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .sim-legend-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
         border: 1px solid #ead8c2;
-        background: #ffffff;
-        overflow-x: auto;
-      }
-
-      .sim-analysis-table {
-        width: 100%;
-        min-width: 200px;
-        border-collapse: collapse;
-        table-layout: fixed;
-        color: #2f241a;
-        font-size: 0.75rem;
-      }
-
-      .sim-analysis-table col.sim-col-difficulty {
-        width: 32px;
-      }
-
-      .sim-analysis-table col.sim-col-method {
-        width: 32px;
-      }
-
-      .sim-analysis-table col.sim-col-metric {
-        width: 16px;
-      }
-
-      .sim-analysis-table thead th {
-        background: #f8ebdd;
-        border-bottom: 1px solid #decab2;
-        text-align: center;
-        padding: 3px 2px;
+        background: #fffaf5;
+        font-size: 0.76rem;
         font-weight: 700;
+        color: #5f4a35;
       }
 
-      .sim-analysis-table thead tr:nth-child(2) th,
-      .sim-analysis-table thead tr:nth-child(3) th {
-        background: #fff4e8;
+      .sim-legend-chip::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: #caa37a;
+        box-shadow: inset 0 0 0 1px rgba(95, 74, 53, 0.08);
       }
 
-      .sim-analysis-table tbody td {
-        border-top: 1px solid #efdfcb;
-        padding: 3px 2px;
+      .sim-legend-chip.is-ours::before {
+        background: #c86b20;
+      }
+
+      .sim-legend-chip.is-vggt::before {
+        background: #7f8f8c;
+      }
+
+      .sim-legend-chip.is-vggt-ours::before {
+        background: #2f7f6f;
+      }
+
+      .sim-analysis-charts {
+        width: min(980px, 100%);
+        margin: 0 auto;
+        display: grid;
+        gap: 18px;
+      }
+
+      .sim-chart-card {
+        position: relative;
+        padding: 10px 16px 12px;
+        border: 1px solid #ead8c2;
+        border-radius: 18px;
+        background:
+          linear-gradient(180deg, rgba(255, 244, 232, 0.8), rgba(255, 255, 255, 0.98)),
+          #ffffff;
+        box-shadow: 0 12px 28px rgba(120, 84, 48, 0.08);
+        text-align: left;
+      }
+
+      .sim-chart-card.is-hard {
+        background:
+          linear-gradient(180deg, rgba(248, 235, 221, 0.86), rgba(255, 255, 255, 0.98)),
+          #ffffff;
+      }
+
+      .sim-chart-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+
+      .sim-chart-card-title {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #2f241a;
+      }
+
+      .sim-chart-card-subtitle {
+        margin: 0;
+        font-size: 0.82rem;
+        color: #7a5a3c;
+      }
+
+      .sim-chart-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .sim-chart-panel {
+        position: relative;
+        padding: 9px 12px 8px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(222, 202, 178, 0.75);
+      }
+
+      .sim-chart-panel-title {
+        margin: 0 0 8px;
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: #5f4531;
         text-align: center;
+      }
+
+      .sim-chart-panel-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .sim-metric-card {
+        position: relative;
+      }
+
+      .sim-metric-plot {
+        position: relative;
+        height: 188px;
+        padding: 8px 6px 14px 34px;
+        border-radius: 12px;
+        background: rgba(255, 250, 245, 0.8);
+        overflow: hidden;
+      }
+
+      .sim-metric-grid {
+        position: absolute;
+        inset: 8px 6px 14px 34px;
+      }
+
+      .sim-metric-grid-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 1px dashed rgba(142, 108, 72, 0.16);
+      }
+
+      .sim-metric-y-tick {
+        position: absolute;
+        left: -30px;
+        width: 24px;
+        font-size: 0.64rem;
+        line-height: 1;
+        text-align: right;
+        color: #8a6d51;
+        transform: translateY(50%);
+      }
+
+      .sim-metric-bars {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 0;
+      }
+
+      .sim-difficulty-group {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 5px;
+      }
+
+      .sim-difficulty-group + .sim-difficulty-group {
+        margin-left: 12px;
+      }
+
+      .sim-chart-bar {
+        position: relative;
+        width: min(18px, calc(25% - 4px));
+        min-width: 10px;
+        height: 0;
+        border: 0;
+        border-radius: 10px 10px 3px 3px;
+        background: linear-gradient(180deg, #d8b18a 0%, #c19367 100%);
+        box-shadow: inset 0 0 0 1px rgba(120, 84, 48, 0.08);
+        cursor: pointer;
+        transform: translateY(12px);
+        opacity: 0;
+        transition:
+          height 760ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 420ms ease,
+          opacity 420ms ease,
+          filter 180ms ease;
+      }
+
+      .sim-chart-bar.is-ours {
+        background: linear-gradient(180deg, #f0a15a 0%, #c86b20 100%);
+      }
+
+      .sim-chart-bar.is-vggt {
+        background: linear-gradient(180deg, #b9c7c4 0%, #7f8f8c 100%);
+      }
+
+      .sim-chart-bar.is-vggt.is-ours {
+        background: linear-gradient(180deg, #66b5a6 0%, #2f7f6f 100%);
+      }
+
+      .sim-chart-bar:hover,
+      .sim-chart-bar:focus-visible {
+        filter: brightness(1.04);
+        outline: none;
+      }
+
+      .sim-analysis-charts.is-visible .sim-chart-bar {
+        height: calc(var(--bar-value, 0) * 1%);
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .sim-chart-bar-labels {
+        width: calc(100% - 34px);
+        margin-left: 34px;
+        margin-top: 2px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.64rem;
+        font-weight: 700;
+        color: #8a6d51;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .sim-chart-bar-label {
+        flex: 1;
+        text-align: center;
+      }
+
+      .sim-chart-metric-label {
+        min-height: 16px;
+        margin-top: 1px;
+        text-align: center;
+      }
+
+      .sim-chart-metric-name {
+        display: block;
+        font-size: 0.74rem;
+        font-weight: 800;
+        color: #473526;
+        line-height: 1.1;
+      }
+
+      .sim-chart-card .sim-analysis-legend {
+        margin-bottom: 8px;
+      }
+
+      .sim-chart-metric-direction {
+        display: block;
+        font-size: 0.68rem;
+        color: #8a6d51;
+      }
+
+      .sim-chart-tooltip {
+        position: absolute;
+        pointer-events: none;
+        min-width: 0;
+        max-width: none;
+        padding: 7px 9px;
+        border-radius: 12px;
+        background: rgba(47, 36, 26, 0.96);
+        color: #fff7ef;
+        box-shadow: 0 14px 30px rgba(47, 36, 26, 0.22);
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 140ms ease, transform 140ms ease;
+        z-index: 3;
+      }
+
+      .sim-chart-tooltip.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .sim-chart-tooltip-body {
+        font-size: 0.76rem;
+        font-weight: 700;
+        line-height: 1;
         white-space: nowrap;
       }
 
-      .sim-analysis-table tbody td.sim-method {
-        text-align: left;
-        width: 65px;
-        min-width: 65px;
-        white-space: normal;
-      }
-
-      .sim-analysis-table tbody td.sim-difficulty {
-        font-style: italic;
-        font-weight: 700;
-      }
-
-      .sim-analysis-table tbody tr.sim-divider td {
-        border-top: 2px solid #d7b899;
+      @media (prefers-reduced-motion: reduce) {
+        .sim-chart-bar,
+        .sim-chart-tooltip {
+          transition: none;
+        }
       }
 
       .results-section {
@@ -1341,56 +1597,137 @@
         object-fit: contain;
       }
 
-      .recon-hist-block {
+      .recon-compare-row {
         width: min(900px, 100%);
         margin: 12px auto 0;
-        padding: 10px 12px 8px;
-        border-radius: 12px;
-        background: var(--panel-tint);
-      }
-
-      .recon-hist-row {
         display: grid;
-        grid-template-columns: 132px minmax(0, 1fr) 56px;
-        gap: 10px;
+        grid-template-columns: minmax(0, 0.92fr) minmax(300px, 0.88fr);
+        gap: 14px;
         align-items: center;
-        margin: 8px 0;
       }
 
-      .recon-hist-label {
-        text-align: left;
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: #2f241a;
+      .recon-compare-row .subsection-text {
+        margin: 0;
       }
 
-      .recon-hist-track {
-        height: 12px;
-        border-radius: 999px;
-        background: #ece7df;
-        overflow: hidden;
+      .recon-size-block {
+        width: 100%;
+        margin: 0;
+        padding: 8px 12px 6px;
+        border-radius: 14px;
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.65), transparent 55%),
+          var(--panel-tint);
+        border: 1px solid #ead8c2;
       }
 
-      .recon-hist-fill {
-        height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, #c88745, #ad6d2d);
+      .recon-size-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
       }
 
-      .recon-hist-value {
-        text-align: right;
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: #2f241a;
-      }
-
-      .recon-hist-caption {
-        margin-top: 6px;
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #2f241a;
+      .recon-size-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        letter-spacing: 0.02em;
+        width: 100%;
+      }
+
+      .recon-size-circle-wrap {
+        height: 112px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .recon-size-circle {
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+          0 16px 26px rgba(125, 88, 54, 0.16);
+      }
+
+      .recon-size-circle.is-megadepthx {
+        width: 108px;
+        height: 108px;
+        color: var(--recon-x-text);
+        background: radial-gradient(
+          circle at 30% 30%,
+          var(--recon-x-start),
+          var(--recon-x-mid) 70%,
+          var(--recon-x-end) 100%
+        );
+      }
+
+      .recon-size-circle.is-megadepth {
+        width: 41px;
+        height: 41px;
+        color: var(--recon-md-text);
+        background: radial-gradient(
+          circle at 30% 30%,
+          var(--recon-md-start),
+          var(--recon-md-mid) 72%,
+          var(--recon-md-end) 100%
+        );
+      }
+
+      .recon-size-value {
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+
+      .recon-size-label {
+        margin-top: 4px;
+        font-size: 0.88rem;
+        font-weight: 800;
+        color: #2f241a;
+        width: 100%;
+        text-align: center;
+      }
+
+      .recon-size-subvalue {
+        margin-top: 2px;
+        font-size: 0.76rem;
+        color: #6a5847;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+      }
+
+      .recon-size-callout {
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 4px;
+        white-space: nowrap;
+      }
+
+      .recon-size-ratio {
+        font-size: clamp(1.55rem, 3vw, 2.2rem);
+        line-height: 1;
+        font-weight: 900;
+        color: #ad6d2d;
+        letter-spacing: -0.03em;
+      }
+
+      .recon-size-ratio-note {
+        margin-top: 2px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #6a5847;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
       }
 
       .reference-line a {
@@ -1416,35 +1753,16 @@
       }
 
       @media (max-width: 900px) {
-        .sim-analysis-table-wrap {
-          -webkit-overflow-scrolling: touch;
+        .sim-analysis-header {
+          align-items: flex-start;
         }
 
-        .sim-analysis-table {
-          min-width: 560px;
-          font-size: 0.7rem;
+        .sim-chart-layout {
+          grid-template-columns: 1fr;
         }
 
-        .sim-analysis-table col.sim-col-difficulty {
-          width: 32px;
-        }
-
-        .sim-analysis-table col.sim-col-method {
-          width: 32px;
-        }
-
-        .sim-analysis-table col.sim-col-metric {
-          width: 32px;
-        }
-
-        .sim-analysis-table thead th,
-        .sim-analysis-table tbody td {
-          padding: 2px 2px;
-        }
-
-        .sim-analysis-table tbody td.sim-method {
-          width: 32px;
-          min-width: 32px;
+        .sim-chart-panel-grid {
+          gap: 10px;
         }
       }
 
@@ -1646,14 +1964,33 @@
           grid-template-columns: 1fr;
         }
 
-        .recon-hist-row {
+        .recon-compare-row {
           grid-template-columns: 1fr;
-          gap: 6px;
+          gap: 10px;
         }
 
-        .recon-hist-label,
-        .recon-hist-value {
-          text-align: left;
+        .recon-size-stage {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .recon-size-callout {
+          padding-bottom: 0;
+          order: -1;
+        }
+
+        .recon-size-circle-wrap {
+          height: auto;
+        }
+
+        .recon-size-circle.is-megadepthx {
+          width: 96px;
+          height: 96px;
+        }
+
+        .recon-size-circle.is-megadepth {
+          width: 36px;
+          height: 36px;
         }
 
         .results-scene-grid {
@@ -1678,26 +2015,53 @@
           flex-wrap: wrap;
         }
 
-        .sim-analysis-table {
-          min-width: 520px;
-          font-size: 0.66rem;
+        .sim-chart-card {
+          padding: 14px 12px 14px;
         }
 
-        .sim-analysis-table col.sim-col-difficulty {
-          width: 24px;
+        .sim-chart-panel {
+          padding: 8px 10px 8px;
         }
 
-        .sim-analysis-table col.sim-col-method {
-          width: 24px;
+        .sim-chart-bar {
+          width: min(14px, calc(25% - 3px));
+          min-width: 8px;
         }
 
-        .sim-analysis-table col.sim-col-metric {
-          width: 24px;
+        .sim-chart-bar-labels {
+          width: calc(100% - 26px);
+          margin-left: 26px;
         }
 
-        .sim-analysis-table tbody td.sim-method {
-          width: 24px;
-          min-width: 24px;
+        .sim-chart-bar-label {
+          font-size: 0.58rem;
+        }
+
+        .sim-difficulty-group + .sim-difficulty-group {
+          margin-left: 10px;
+        }
+
+        .sim-chart-panel-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .sim-metric-plot {
+          height: 140px;
+          padding: 8px 6px 12px 26px;
+        }
+
+        .sim-metric-grid {
+          inset: 8px 6px 12px 26px;
+        }
+
+        .sim-metric-y-tick {
+          left: -22px;
+          width: 18px;
+          font-size: 0.58rem;
+        }
+
+        .sim-chart-metric-name {
+          font-size: 0.68rem;
         }
 
         .results-note-popup {
@@ -1838,12 +2202,13 @@
       </div>
 
       <p class="abstract-text tldr-box">
-        <b>TL;DR:</b> 
-        <!-- We define long-tail Internet photo reconstruction by an
-        extremely uneven camera-view distribution, and contribute a new dataset
-        plus a sampling-emulation strategy for this setting. -->
-        Toward general 3D foundation models, we go beyond densely captured imagery to learn from the long tail camera distribution of Internet photo collections.
-        We introduce MegaDepth-X, a large-scale dataset with high-quality 3D supervision, together with sparsity-aware sampling during training, to make the learning possible.
+        <b>TL;DR:</b>
+        We go beyond densely captured imagery to train more general 3D
+        foundation models from the long tail of noisy, sparse, incomplete
+        Internet photo collections of 3D scenes. We achieve this through
+        MegaDepth-X, a large new dataset of scenes with high-quality 3D
+        supervision, and a new way of simulating difficult image sets for
+        training.
       </p>
 
       <div class="teaser">
@@ -1966,34 +2331,47 @@
           />
         </div>
 
-        <p class="subsection-text">
-          After this filtering stage, we eventually curate <b>MegaDepth-X</b>, which
-          is substantially larger than the commonly used in-the-wild
-          reconstruction dataset,
-          <a
-            href="https://www.cs.cornell.edu/projects/megadepth/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >MegaDepth</a
-          >.
-        </p>
+        <div class="recon-compare-row">
+          <p class="subsection-text">
+            After this filtering stage, we eventually curate <b>MegaDepth-X</b>,
+            which is substantially larger than the commonly used in-the-wild
+            reconstruction dataset,
+            <a
+              href="https://www.cs.cornell.edu/projects/megadepth/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >MegaDepth</a
+            >.
+          </p>
 
-        <div class="recon-hist-block" aria-label="Reconstruction count comparison">
-          <div class="recon-hist-row">
-            <div class="recon-hist-label">MegaDepth-X</div>
-            <div class="recon-hist-track">
-              <div class="recon-hist-fill" style="width: 100%"></div>
+          <div class="recon-size-block" aria-label="Reconstruction count comparison">
+            <div class="recon-size-stage">
+              <div class="recon-size-item">
+                <div class="recon-size-circle-wrap">
+                  <div class="recon-size-circle is-megadepthx">
+                    <div class="recon-size-value">1865</div>
+                  </div>
+                </div>
+                <div class="recon-size-label">MegaDepth-X</div>
+                <div class="recon-size-subvalue">reconstructions</div>
+              </div>
+
+              <div class="recon-size-callout" aria-label="MegaDepth-X is 7 times larger">
+                <div class="recon-size-ratio">7x</div>
+                <div class="recon-size-ratio-note">larger</div>
+              </div>
+
+              <div class="recon-size-item">
+                <div class="recon-size-circle-wrap">
+                  <div class="recon-size-circle is-megadepth">
+                    <div class="recon-size-value">266</div>
+                  </div>
+                </div>
+                <div class="recon-size-label">MegaDepth</div>
+                <div class="recon-size-subvalue">reconstructions</div>
+              </div>
             </div>
-            <div class="recon-hist-value">1865</div>
           </div>
-          <div class="recon-hist-row">
-            <div class="recon-hist-label">MegaDepth</div>
-            <div class="recon-hist-track">
-              <div class="recon-hist-fill" style="width: 11.9%"></div>
-            </div>
-            <div class="recon-hist-value">266</div>
-          </div>
-          <div class="recon-hist-caption">reconstructions</div>
         </div>
         <!-- </div> -->
       </section>
@@ -2469,6 +2847,11 @@
           </button>
         </div>
 
+      </section>
+
+      <h2 class="section-title">Experimental Results</h2>
+
+      <section class="subsection">
         <div class="sim-analysis">
           <p class="sim-analysis-text">
             We compare pretrained baselines and sparse-aware finetuned models
@@ -2488,11 +2871,10 @@
               rel="noopener noreferrer"
               >VGGT</a
             >
-            on our curated
-            evaluation set with two difficulty levels (easy and hard). Overall,
-            finetuned models consistently outperform their pretrained
-            counterparts, with larger gains on harder, sparser scenes. Metric
-            definitions and evaluation protocol follow
+            on our curated evaluation set with two difficulty levels (easy and
+            hard). Overall, finetuned models consistently outperform their
+            pretrained counterparts, with larger gains on harder, sparser
+            scenes. Metric definitions and evaluation protocol follow
             <a
               class="pi-link"
               href="https://yyfz.github.io/pi3/"
@@ -2502,184 +2884,13 @@
             >.
           </p>
 
-          <div class="sim-analysis-table-wrap">
-            <table class="sim-analysis-table" aria-label="Pretrained versus sparse-aware finetuned comparison for pi3 and VGGT">
-              <colgroup>
-                <col class="sim-col-difficulty" />
-                <col class="sim-col-method" />
-                <col class="sim-col-metric" span="6" />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th rowspan="2">Difficulty</th>
-                  <th rowspan="2">Method</th>
-                  <th colspan="3">Camera Pose Estimation</th>
-                  <th colspan="3">Point Map Estimation</th>
-                </tr>
-                <tr>
-                  <th>RRA@5↑</th>
-                  <th>RTA@5↑</th>
-                  <th>AUC@5↑</th>
-                  <th>Acc Mean↓</th>
-                  <th>Comp Mean↓</th>
-                  <th>NV Mean↑</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="sim-difficulty" rowspan="4">easy</td>
-                  <td class="sim-method">
-                    pretrained
-                    <a
-                      class="pi-link pi-inline"
-                      href="https://yyfz.github.io/pi3/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >π³</a
-                    >
-                  </td>
-                  <td>88.97</td>
-                  <td>68.79</td>
-                  <td>45.84</td>
-                  <td>0.055</td>
-                  <td>0.039</td>
-                  <td>0.712</td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    finetuned 
-                    <a
-                      class="pi-link pi-inline"
-                      href="https://yyfz.github.io/pi3/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >π³</a
-                    >
-                  </td>
-                  <td><b>95.64</b></td>
-                  <td><b>76.85</b></td>
-                  <td><b>55.58</b></td>
-                  <td><b>0.035</b></td>
-                  <td><b>0.024</b></td>
-                  <td><b>0.724</b></td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    pretrained
-                    <a
-                      class="vggt-link"
-                      href="https://vgg-t.github.io/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >VGGT</a
-                    >
-                  </td>
-                  <td>84.17</td>
-                  <td>58.47</td>
-                  <td>35.32</td>
-                  <td>0.093</td>
-                  <td>0.055</td>
-                  <td>0.695</td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    finetuned 
-                    <a
-                      class="vggt-link"
-                      href="https://vgg-t.github.io/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >VGGT</a
-                    >
-                  </td>
-                  <td><b>92.41</b></td>
-                  <td><b>71.12</b></td>
-                  <td><b>48.78</b></td>
-                  <td><b>0.050</b></td>
-                  <td><b>0.033</b></td>
-                  <td><b>0.719</b></td>
-                </tr>
-
-                <tr class="sim-divider">
-                  <td class="sim-difficulty" rowspan="4">hard</td>
-                  <td class="sim-method">
-                    pretrained
-                    <a
-                      class="pi-link pi-inline"
-                      href="https://yyfz.github.io/pi3/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >π³</a
-                    >
-                  </td>
-                  <td>75.31</td>
-                  <td>59.16</td>
-                  <td>36.93</td>
-                  <td>0.101</td>
-                  <td>0.133</td>
-                  <td>0.689</td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    finetuned
-                    <a
-                      class="pi-link pi-inline"
-                      href="https://yyfz.github.io/pi3/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >π³</a
-                    >
-                  </td>
-                  <td><b>86.40</b></td>
-                  <td><b>71.00</b></td>
-                  <td><b>47.93</b></td>
-                  <td><b>0.068</b></td>
-                  <td><b>0.066</b></td>
-                  <td><b>0.713</b></td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    pretrained
-                    <a
-                      class="vggt-link"
-                      href="https://vgg-t.github.io/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >VGGT</a
-                    >
-                  </td>
-                  <td>70.98</td>
-                  <td>52.98</td>
-                  <td>29.10</td>
-                  <td>0.149</td>
-                  <td>0.151</td>
-                  <td>0.675</td>
-                </tr>
-                <tr>
-                  <td class="sim-method">
-                    finetuned
-                    <a
-                      class="vggt-link"
-                      href="https://vgg-t.github.io/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      >VGGT</a
-                    >
-                  </td>
-                  <td><b>81.07</b></td>
-                  <td><b>65.59</b></td>
-                  <td><b>41.49</b></td>
-                  <td><b>0.089</b></td>
-                  <td><b>0.084</b></td>
-                  <td><b>0.709</b></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <div
+            id="simAnalysisCharts"
+            class="sim-analysis-charts"
+            aria-label="pi3 performance plots for easy and hard scenes"
+          ></div>
         </div>
       </section>
-
-      <h2 class="section-title">Experimental Results</h2>
 
       <section class="subsection results-section">
         <p class="subsection-text">
@@ -3806,6 +4017,290 @@
 
       setupDelayedLoopVideos(["megascenesVideo", "megadepthxVideo"], 750);
       setupResultsNotePopup();
+
+      function setupSimAnalysisCharts() {
+        const root = document.getElementById("simAnalysisCharts");
+        if (!root) {
+          return;
+        }
+
+        const chartData = {
+          groups: [
+            {
+              title: "Camera Pose Estimation",
+              metrics: [
+                { key: "rra", label: "RRA@5\u2191", direction: "up", decimals: 2 },
+                { key: "rta", label: "RTA@5\u2191", direction: "up", decimals: 2 },
+                { key: "auc", label: "AUC@5\u2191", direction: "up", decimals: 2 },
+              ],
+            },
+            {
+              title: "Point Map Estimation",
+              metrics: [
+                { key: "acc", label: "Acc Mean\u2193", direction: "down", decimals: 3 },
+                { key: "comp", label: "Comp Mean\u2193", direction: "down", decimals: 3 },
+                { key: "nv", label: "NV Mean\u2191", direction: "up", decimals: 3 },
+              ],
+            },
+          ],
+          values: {
+            easy: {
+              pi3Pretrained: [88.97, 68.79, 45.84, 0.055, 0.039, 0.712],
+              pi3Ours: [95.64, 76.85, 55.58, 0.035, 0.024, 0.724],
+              vggtPretrained: [84.17, 58.47, 35.32, 0.093, 0.055, 0.695],
+              vggtOurs: [92.41, 71.12, 48.78, 0.050, 0.033, 0.719],
+            },
+            hard: {
+              pi3Pretrained: [75.31, 59.16, 36.93, 0.101, 0.133, 0.689],
+              pi3Ours: [86.40, 71.00, 47.93, 0.068, 0.066, 0.713],
+              vggtPretrained: [70.98, 52.98, 29.10, 0.149, 0.151, 0.675],
+              vggtOurs: [81.07, 65.59, 41.49, 0.089, 0.084, 0.709],
+            },
+          },
+        };
+
+        const formatTick = (value, decimals) => {
+          if (Math.abs(value) >= 10) {
+            return value.toFixed(Math.min(decimals, 1));
+          }
+          return value.toFixed(decimals);
+        };
+
+        const makeTicks = (min, max, decimals) => {
+          const ticks = [min, (min + max) / 2, max];
+          return ticks.map((tick) => ({
+            label: formatTick(tick, decimals),
+            position: max === min ? 0 : ((tick - min) / (max - min)) * 100,
+          }));
+        };
+
+        const difficulties = [
+          { key: "easy", label: "Easy" },
+          { key: "hard", label: "Hard" },
+        ];
+
+        const pipelines = [
+          { key: "pi3Pretrained", method: "pretrained π³", className: "sim-chart-bar" },
+          { key: "pi3Ours", method: "finetuned π³", className: "sim-chart-bar is-ours" },
+          { key: "vggtPretrained", method: "pretrained VGGT", className: "sim-chart-bar is-vggt" },
+          { key: "vggtOurs", method: "finetuned VGGT", className: "sim-chart-bar is-vggt is-ours" },
+        ];
+
+        const panels = chartData.groups
+          .map((group, groupIndex) => {
+            const metricCards = group.metrics
+              .map((metric, metricIndex) => {
+                const dataIndex = groupIndex * 3 + metricIndex;
+                const allValues = difficulties.flatMap((difficulty) => [
+                  ...pipelines.map(
+                    (pipeline) => chartData.values[difficulty.key][pipeline.key][dataIndex],
+                  ),
+                ]);
+
+                let axisMin = 0;
+                let axisMax = 100;
+                if (groupIndex !== 0) {
+                  const minValue = Math.min(...allValues);
+                  const maxValue = Math.max(...allValues);
+                  const span = maxValue - minValue;
+                  const padding =
+                    span === 0
+                      ? Math.max(Math.abs(maxValue) * 0.08, 0.01)
+                      : span * 0.22;
+                  axisMin = Math.max(0, minValue - padding);
+                  axisMax = maxValue + padding;
+                }
+
+                const safeSpan = axisMax - axisMin || 1;
+                const ticks = makeTicks(axisMin, axisMax, metric.decimals);
+                const tickMarkup = ticks
+                  .map(
+                    (tick) => `
+                      <div class="sim-metric-grid-line" style="bottom: ${tick.position}%"></div>
+                      <div class="sim-metric-y-tick" style="bottom: ${tick.position}%">${tick.label}</div>
+                    `,
+                  )
+                  .join("");
+
+                const difficultyGroups = difficulties
+                  .map((difficulty, difficultyIndex) => {
+                    const bars = pipelines
+                      .map((pipeline, pipelineIndex) => {
+                        const value = chartData.values[difficulty.key][pipeline.key][dataIndex];
+                        const height = ((value - axisMin) / safeSpan) * 100;
+                        return {
+                          className: pipeline.className,
+                          difficulty: difficulty.label,
+                          method: pipeline.method,
+                          value,
+                          delay: difficultyIndex * 160 + pipelineIndex * 32 + dataIndex * 24,
+                          height,
+                        };
+                      });
+
+                    return {
+                      label: difficulty.label,
+                      bars,
+                    };
+                  });
+
+                return `
+                  <div class="sim-metric-card">
+                    <div class="sim-metric-plot">
+                      <div class="sim-metric-grid">
+                        ${tickMarkup}
+                        <div class="sim-metric-bars">
+                          ${difficultyGroups
+                            .map(
+                              (difficultyGroup) => `
+                                <div class="sim-difficulty-group">
+                                  ${difficultyGroup.bars
+                                    .map(
+                                      (bar) => `
+                                        <button
+                                          class="${bar.className}"
+                                          type="button"
+                                          style="--bar-value: ${bar.height.toFixed(2)}; transition-delay: ${bar.delay}ms"
+                                          aria-label="${bar.difficulty} ${bar.method} ${metric.label}: ${bar.value.toFixed(metric.decimals)}"
+                                          data-method="${bar.method}"
+                                          data-difficulty="${bar.difficulty}"
+                                          data-metric="${metric.label}"
+                                          data-raw="${bar.value.toFixed(metric.decimals)}"
+                                        ></button>
+                                      `,
+                                    )
+                                    .join("")}
+                                </div>
+                              `,
+                            )
+                            .join("")}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sim-chart-bar-labels" aria-hidden="true">
+                      ${difficultyGroups
+                        .map(
+                          (difficultyGroup) => `
+                            <span class="sim-chart-bar-label">${difficultyGroup.label}</span>
+                          `,
+                        )
+                        .join("")}
+                    </div>
+                    <div class="sim-chart-metric-label">
+                      <span class="sim-chart-metric-name">${metric.label}</span>
+                    </div>
+                  </div>
+                `;
+              })
+              .join("");
+
+            return `
+              <section class="sim-chart-panel">
+                <h4 class="sim-chart-panel-title">${group.title}</h4>
+                <div class="sim-chart-panel-grid">${metricCards}</div>
+              </section>
+            `;
+          })
+          .join("");
+
+        root.innerHTML = `
+          <article class="sim-chart-card">
+            <div class="sim-chart-main">
+              <div class="sim-analysis-legend" aria-label="Method legend">
+                <span class="sim-legend-chip">pretrained π³</span>
+                <span class="sim-legend-chip is-ours">finetuned π³ (ours)</span>
+                <span class="sim-legend-chip is-vggt">pretrained VGGT</span>
+                <span class="sim-legend-chip is-vggt-ours">finetuned VGGT (ours)</span>
+              </div>
+              <div class="sim-chart-layout">
+                ${panels}
+              </div>
+              <div class="sim-chart-tooltip" hidden>
+                <div class="sim-chart-tooltip-body"></div>
+              </div>
+            </div>
+          </article>
+        `;
+
+        const showCharts = () => {
+          root.classList.add("is-visible");
+        };
+
+        if ("IntersectionObserver" in window) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  showCharts();
+                  observer.disconnect();
+                }
+              });
+            },
+            { threshold: 0.2 },
+          );
+          observer.observe(root);
+        } else {
+          showCharts();
+        }
+
+        root.querySelectorAll(".sim-chart-main").forEach((chartMain) => {
+          const tooltip = chartMain.querySelector(".sim-chart-tooltip");
+          const body = tooltip?.querySelector(".sim-chart-tooltip-body");
+          const bars = chartMain.querySelectorAll(".sim-chart-bar");
+
+          const positionTooltip = (event) => {
+            if (!tooltip) {
+              return;
+            }
+            const bounds = chartMain.getBoundingClientRect();
+            const x = event.clientX - bounds.left + 10;
+            const y = event.clientY - bounds.top - 14;
+            tooltip.style.left = `${Math.min(
+              Math.max(8, x),
+              bounds.width - tooltip.offsetWidth - 8,
+            )}px`;
+            tooltip.style.top = `${Math.max(8, y - tooltip.offsetHeight)}px`;
+          };
+
+          bars.forEach((bar) => {
+            const showTooltip = (event) => {
+              if (!tooltip || !body) {
+                return;
+              }
+              body.textContent = `${bar.dataset.raw}`;
+              tooltip.hidden = false;
+              requestAnimationFrame(() => {
+                tooltip.classList.add("is-visible");
+                positionTooltip(event);
+              });
+            };
+
+            bar.addEventListener("mouseenter", showTooltip);
+            bar.addEventListener("focus", (event) => {
+              const rect = bar.getBoundingClientRect();
+              showTooltip({
+                clientX: rect.left + rect.width / 2,
+                clientY: rect.top,
+              });
+            });
+            bar.addEventListener("mousemove", positionTooltip);
+            bar.addEventListener("mouseleave", () => {
+              tooltip?.classList.remove("is-visible");
+              if (tooltip) {
+                tooltip.hidden = true;
+              }
+            });
+            bar.addEventListener("blur", () => {
+              tooltip?.classList.remove("is-visible");
+              if (tooltip) {
+                tooltip.hidden = true;
+              }
+            });
+          });
+        });
+      }
+
+      setupSimAnalysisCharts();
     </script>
   </body>
 </html>
