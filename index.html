@@ -363,186 +363,108 @@
       }
 
       .dense-card {
-        width: min(900px, 100%);
+        width: min(760px, 100%);
         margin: 0 auto;
         border: none;
-        border-radius: 12px;
+        border-radius: 14px;
         background: var(--panel-tint);
         padding: 14px;
-        --scene-ar: 4 / 3;
       }
 
-      .dense-head {
+      .dense-compare-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 12px;
-        font-size: 0.98rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        color: #1e1e1e;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
       }
 
-      .dense-grid {
-        margin-top: 8px;
+      .dense-compare-item {
+        margin: 0;
+      }
+
+      .dense-compare-media {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 12px;
-        align-items: stretch;
-      }
-
-      .img-pane,
-      .viewer-pane,
-      .video-pane {
-        border: none;
+        width: 100%;
         border-radius: 10px;
         background: #ffffff;
-        position: relative;
-        aspect-ratio: var(--scene-ar);
         overflow: hidden;
       }
 
-      .img-pane {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-
-      .img-pane img {
+      .dense-compare-media img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-      }
-
-      .compare-stage {
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        overflow: hidden;
-        --split: 50%;
-      }
-
-      .compare-media {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
         display: block;
-        object-fit: contain;
-        user-select: none;
-        -webkit-user-drag: none;
-        pointer-events: none;
-        background: #fff5e9;
       }
 
-      #videoCompareStage .compare-media {
-        object-fit: cover;
+      .dense-caption-row {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
       }
 
-      .compare-media.before {
-        clip-path: inset(0 calc(100% - var(--split)) 0 0);
-      }
-
-      .compare-media.after {
-        clip-path: inset(0 0 0 var(--split));
-      }
-
-      .overlay-label {
-        position: absolute;
-        bottom: 8px;
-        font-weight: 700;
-        font-size: 0.82rem;
-        color: #6a4b2d;
-        background: rgba(255, 255, 255, 0.93);
-        border: none;
-        border-radius: 999px;
-        padding: 2px 8px;
-        z-index: 3;
-        pointer-events: none;
-      }
-
-      .overlay-label.before {
-        left: 6px;
-      }
-
-      .overlay-label.after {
-        right: 6px;
-      }
-
-      .compare-splitter {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: var(--split);
-        width: 28px;
-        transform: translateX(-50%);
-        cursor: ew-resize;
-        z-index: 4;
-        touch-action: none;
-      }
-
-      .compare-splitter-line {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 1.5px;
-        margin-left: -1px;
-        background: #b26b2d;
-        pointer-events: none;
-      }
-
-      .compare-splitter-handle {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 24px;
-        height: 24px;
-        margin: -12px 0 0 -12px;
-        border-radius: 50%;
-        border: 1.5px solid #b26b2d;
-        background: #ffffff;
-        color: #b26b2d;
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 20px;
+      .dense-caption {
         text-align: center;
-        pointer-events: none;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #6a4b2d;
       }
 
-      .viewer-toolbar {
-        margin-top: 12px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
+      .dense-term-inline {
+        display: inline-flex;
         align-items: center;
-        flex-wrap: wrap;
       }
 
-      .viewer-toolbar label {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #1e1e1e;
+      .dense-term-trigger {
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: inherit;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 2px;
       }
 
-      .viewer-toolbar select {
-        margin-left: 8px;
-        border: 1px solid var(--line-strong);
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 5px 8px;
-        font-size: 0.94rem;
+      .dense-term-trigger:focus-visible {
+        outline: 2px solid #b26b2d;
+        outline-offset: 2px;
+        border-radius: 4px;
       }
 
-      .status {
-        font-size: 0.9rem;
-        color: var(--text-soft);
+      .dense-term-icon {
+        display: inline-flex;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #b78c62;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.68rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #6a4b2d;
       }
 
-      .dense-foot {
-        margin-top: 10px;
-        font-size: 0.98rem;
-        font-weight: 600;
+      .dense-term-popup {
+        position: fixed;
+        width: min(420px, calc(100vw - 24px));
+        border: 1px solid #decab2;
+        border-radius: 10px;
+        background: #fffdf9;
+        box-shadow: 0 8px 22px rgba(61, 45, 28, 0.14);
+        padding: 10px 12px;
+        text-align: left;
+        color: #4a3929;
+        font-size: 0.85rem;
+        line-height: 1.45;
+        z-index: 1200;
       }
 
       .note {
@@ -1599,15 +1521,16 @@
 
       .recon-compare-row {
         width: min(900px, 100%);
-        margin: 12px auto 0;
+        margin: 40px auto 0;
         display: grid;
         grid-template-columns: minmax(0, 0.92fr) minmax(300px, 0.88fr);
-        gap: 14px;
+        gap: 24px;
         align-items: center;
       }
 
       .recon-compare-row .subsection-text {
         margin: 0;
+        width: min(430px, 100%);
       }
 
       .recon-size-block {
@@ -1810,15 +1733,8 @@
           padding: 10px 12px;
         }
 
-        .dense-head,
-        .dense-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .img-pane,
-        .viewer-pane,
-        .video-pane {
-          min-height: 0;
+        .dense-card {
+          padding: 10px;
         }
 
         .section-title {
@@ -1920,19 +1836,9 @@
           grid-template-columns: 1fr;
         }
 
-        .viewer-toolbar {
+        .dense-compare-grid,
+        .dense-caption-row {
           gap: 8px;
-        }
-
-        .viewer-toolbar label {
-          width: 100%;
-          text-align: left;
-        }
-
-        .viewer-toolbar select {
-          margin-left: 0;
-          margin-top: 6px;
-          width: 100%;
         }
 
         .results-controls {
@@ -1967,6 +1873,10 @@
         .recon-compare-row {
           grid-template-columns: 1fr;
           gap: 10px;
+        }
+
+        .recon-compare-row .subsection-text {
+          width: 100%;
         }
 
         .recon-size-stage {
@@ -2065,6 +1975,10 @@
         }
 
         .results-note-popup {
+          width: min(320px, calc(100vw - 20px));
+        }
+
+        .dense-term-popup {
           width: min(320px, calc(100vw - 20px));
         }
 
@@ -2321,7 +2235,10 @@
           We also manually verify reconstructed scenes against external
           references (e.g., Google Maps and Google Earth), and discard any
           scene that does not align with the corresponding bird's-eye-view
-          geometry.
+          geometry. All four examples shown here are bad SfM reconstructions:
+          in (a), non-static human motions cause SfM to fail; in (b) and (c),
+          inconsistent objects dominate the images; and in (d), reconstruction
+          is degraded by doppelganger ambiguities.
         </p>
 
         <div class="frame badsfm-frame">
@@ -2382,115 +2299,89 @@
         <h3>Dense depth refinement</h3>
 
         <p class="subsection-text">
-          We further refine MVS depth maps to mitigate depth bleeding (where
-          background depths leak into foreground regions), and to reduce
-          inconsistent or noisy estimates in areas affected by transient
-          objects, such as people, cars, or seasonal vegetation changes.
+          We refine MVS depth maps to address two common failure modes. In the
+          first row (red box), our filtering mitigates
+          <span class="dense-term-inline">
+            <button
+              type="button"
+              id="depthBleedingTrigger"
+              class="dense-term-trigger"
+              aria-expanded="false"
+              aria-controls="depthBleedingPopup"
+            >
+              depth bleeding <span class="dense-term-icon" aria-hidden="true">i</span>
+            </button>
+            <span
+              id="depthBleedingPopup"
+              class="dense-term-popup"
+              role="dialog"
+              aria-label="Depth bleeding explanation"
+              hidden
+              >Depth bleeding occurs when background depth is incorrectly
+              assigned to foreground pixels.</span>
+          </span>.
+          In the second row, around the hanging light strings in the sky, our
+          filtering removes bad depth caused by transient objects, producing
+          cleaner depth than MegaDepth filtering.
         </p>
 
         <div class="dense-card">
-          <div class="dense-head">
-            <div>Image</div>
-            <div>Depth</div>
-            <div>Point Cloud</div>
-          </div>
-
-          <div class="dense-grid">
-            <div class="img-pane">
-              <img
-                id="sceneImage"
-                src="material/depth/Baptistry_(Siena)/img.jpg"
-                alt="Selected scene image"
-              />
-            </div>
-
-            <div class="video-pane">
-              <div id="imageCompareStage" class="compare-stage">
+          <div class="dense-compare-grid" aria-label="Dense depth refinement comparison">
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
                 <img
-                  id="beforeCompareImage"
-                  class="compare-media before"
-                  src="material/depth/Baptistry_(Siena)/before.jpg"
-                  alt="Before comparison image"
+                  src="material/depth/compare_0_img.png"
+                  alt="Input image for depth bleeding example"
                 />
+              </div>
+            </figure>
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
                 <img
-                  id="afterCompareImage"
-                  class="compare-media after"
-                  src="material/depth/Baptistry_(Siena)/after.jpg"
-                  alt="After comparison image"
+                  src="material/depth/compare_0_megadepth.png"
+                  alt="MegaDepth filtering result for depth bleeding example"
                 />
-                <div class="overlay-label before">Before</div>
-                <div class="overlay-label after">After</div>
-                <div
-                  id="imageCompareSplitter"
-                  class="compare-splitter"
-                  role="slider"
-                  aria-label="Resize before and after images"
-                  aria-orientation="vertical"
-                  aria-valuemin="2"
-                  aria-valuemax="98"
-                  aria-valuenow="50"
-                  tabindex="0"
-                >
-                  <div class="compare-splitter-line"></div>
-                  <div class="compare-splitter-handle">&lt;&gt;</div>
-                </div>
               </div>
-            </div>
+            </figure>
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
+                <img
+                  src="material/depth/compare_0_megadepth-x.png"
+                  alt="Our filtering result for depth bleeding example"
+                />
+              </div>
+            </figure>
 
-            <div class="video-pane">
-              <div id="videoCompareStage" class="compare-stage">
-                <video
-                  id="beforeCompareVideo"
-                  class="compare-media before"
-                  muted
-                  loop
-                  autoplay
-                  playsinline
-                  preload="metadata"
-                ></video>
-                <video
-                  id="afterCompareVideo"
-                  class="compare-media after"
-                  muted
-                  loop
-                  autoplay
-                  playsinline
-                  preload="metadata"
-                ></video>
-                <div class="overlay-label before">Before</div>
-                <div class="overlay-label after">After</div>
-                <div
-                  id="videoCompareSplitter"
-                  class="compare-splitter"
-                  role="slider"
-                  aria-label="Resize before and after videos"
-                  aria-orientation="vertical"
-                  aria-valuemin="2"
-                  aria-valuemax="98"
-                  aria-valuenow="50"
-                  tabindex="0"
-                >
-                  <div class="compare-splitter-line"></div>
-                  <div class="compare-splitter-handle">&lt;&gt;</div>
-                </div>
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
+                <img
+                  src="material/depth/compare_1_img.jpg"
+                  alt="Input image for transient object example"
+                />
               </div>
-            </div>
+            </figure>
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
+                <img
+                  src="material/depth/compare_1_megadepth.jpg"
+                  alt="MegaDepth filtering result for transient object example"
+                />
+              </div>
+            </figure>
+            <figure class="dense-compare-item">
+              <div class="dense-compare-media">
+                <img
+                  src="material/depth/compare_1_megadepth-x.jpg"
+                  alt="Our filtering result for transient object example"
+                />
+              </div>
+            </figure>
           </div>
 
-          <div class="viewer-toolbar">
-            <label>
-              Scene
-              <select id="sceneSelect"></select>
-            </label>
-            <div id="viewerStatus" class="status">Loading comparisons...</div>
-          </div>
-
-          <!-- <div id="sceneFoot" class="dense-foot">
-            SCENE: Baptistry_(Siena), Royal_Albert_Hall, Sant'Andrea_(Vercelli)
-          </div> -->
-          <div class="note">
-            Tip: drag each splitter to compare before/after dense depth
-            refinement.
+          <div class="dense-caption-row" aria-hidden="true">
+            <div class="dense-caption">Image</div>
+            <div class="dense-caption">MegaDepth filtering</div>
+            <div class="dense-caption">Our filtering</div>
           </div>
         </div>
       </section>
@@ -3037,261 +2928,6 @@
     </main>
 
     <script>
-      const SCENES = [
-        "Baptistry_(Siena)",
-        "Royal_Albert_Hall",
-        "Sant'Andrea_(Vercelli)",
-      ];
-      const sceneBase = "material/depth";
-
-      const sceneSelect = document.getElementById("sceneSelect");
-      const sceneImage = document.getElementById("sceneImage");
-      const denseCard = document.querySelector(".dense-card");
-      const beforeCompareImage = document.getElementById("beforeCompareImage");
-      const afterCompareImage = document.getElementById("afterCompareImage");
-      const beforeCompareVideo = document.getElementById("beforeCompareVideo");
-      const afterCompareVideo = document.getElementById("afterCompareVideo");
-      const statusText = document.getElementById("viewerStatus");
-      const imageCompareStage = document.getElementById("imageCompareStage");
-      const videoCompareStage = document.getElementById("videoCompareStage");
-      const imageCompareSplitter = document.getElementById(
-        "imageCompareSplitter",
-      );
-      const videoCompareSplitter = document.getElementById(
-        "videoCompareSplitter",
-      );
-
-      let activeToken = 0;
-
-      function setStatus(text) {
-        statusText.textContent = text;
-      }
-
-      function updateSceneAspectFromImage() {
-        const width = sceneImage.naturalWidth;
-        const height = sceneImage.naturalHeight;
-        if (!denseCard || width <= 0 || height <= 0) {
-          return;
-        }
-
-        denseCard.style.setProperty("--scene-ar", `${width} / ${height}`);
-      }
-
-      function setStageSplit(stage, splitter, value) {
-        const clamped = Math.min(0.98, Math.max(0.02, value));
-        const percent = `${(clamped * 100).toFixed(2)}%`;
-        stage.style.setProperty("--split", percent);
-        splitter.setAttribute(
-          "aria-valuenow",
-          String(Math.round(clamped * 100)),
-        );
-      }
-
-      function setSplitFromClientX(stage, splitter, clientX) {
-        const rect = stage.getBoundingClientRect();
-        if (rect.width <= 0) {
-          return;
-        }
-
-        const normalized = (clientX - rect.left) / rect.width;
-        setStageSplit(stage, splitter, normalized);
-      }
-
-      function loadImageWithFallback(img, paths, timeoutMs = 12000) {
-        return new Promise((resolve, reject) => {
-          let index = 0;
-
-          const tryNext = () => {
-            if (index >= paths.length) {
-              reject(new Error("Failed to load image candidates"));
-              return;
-            }
-
-            const path = paths[index++];
-            const timer = setTimeout(() => {
-              cleanup();
-              tryNext();
-            }, timeoutMs);
-
-            const onLoad = () => {
-              clearTimeout(timer);
-              cleanup();
-              resolve(path);
-            };
-
-            const onError = () => {
-              clearTimeout(timer);
-              cleanup();
-              tryNext();
-            };
-
-            const cleanup = () => {
-              img.removeEventListener("load", onLoad);
-              img.removeEventListener("error", onError);
-            };
-
-            img.addEventListener("load", onLoad);
-            img.addEventListener("error", onError);
-            img.src = encodeURI(path);
-          };
-
-          tryNext();
-        });
-      }
-
-      function loadVideoWithFallback(video, paths, timeoutMs = 15000) {
-        return new Promise((resolve, reject) => {
-          let index = 0;
-
-          const tryNext = () => {
-            if (index >= paths.length) {
-              reject(new Error("Failed to load video candidates"));
-              return;
-            }
-
-            const path = paths[index++];
-            const timer = setTimeout(() => {
-              cleanup();
-              tryNext();
-            }, timeoutMs);
-
-            const onLoaded = () => {
-              clearTimeout(timer);
-              cleanup();
-              resolve(path);
-            };
-
-            const onError = () => {
-              clearTimeout(timer);
-              cleanup();
-              tryNext();
-            };
-
-            const cleanup = () => {
-              video.removeEventListener("loadeddata", onLoaded);
-              video.removeEventListener("error", onError);
-            };
-
-            video.addEventListener("loadeddata", onLoaded);
-            video.addEventListener("error", onError);
-            video.src = encodeURI(path);
-            video.load();
-          };
-
-          tryNext();
-        });
-      }
-
-      function attachSplitter(stage, splitter) {
-        let dragging = false;
-
-        splitter.addEventListener("pointerdown", (event) => {
-          event.preventDefault();
-          dragging = true;
-          splitter.setPointerCapture(event.pointerId);
-          setSplitFromClientX(stage, splitter, event.clientX);
-        });
-
-        splitter.addEventListener("pointermove", (event) => {
-          if (!dragging) {
-            return;
-          }
-
-          event.preventDefault();
-          setSplitFromClientX(stage, splitter, event.clientX);
-        });
-
-        const stopDragging = (event) => {
-          if (!dragging) {
-            return;
-          }
-
-          dragging = false;
-          if (event && splitter.hasPointerCapture(event.pointerId)) {
-            splitter.releasePointerCapture(event.pointerId);
-          }
-        };
-
-        splitter.addEventListener("pointerup", stopDragging);
-        splitter.addEventListener("pointercancel", stopDragging);
-        splitter.addEventListener("lostpointercapture", () => {
-          dragging = false;
-        });
-
-        splitter.addEventListener("keydown", (event) => {
-          const current =
-            Number(splitter.getAttribute("aria-valuenow") || "50") / 100;
-          if (event.key === "ArrowLeft") {
-            event.preventDefault();
-            setStageSplit(stage, splitter, current - 0.02);
-            return;
-          }
-
-          if (event.key === "ArrowRight") {
-            event.preventDefault();
-            setStageSplit(stage, splitter, current + 0.02);
-          }
-        });
-      }
-
-      function getVideoCandidates(sceneName, side) {
-        return [`${sceneBase}/${sceneName}/${side}.mp4`];
-      }
-
-      async function loadScene(sceneName) {
-        const token = ++activeToken;
-        sceneSelect.disabled = true;
-        setStatus("Loading comparisons...");
-
-        sceneImage.alt = `${sceneName} image`;
-        beforeCompareImage.alt = `${sceneName} before image`;
-        afterCompareImage.alt = `${sceneName} after image`;
-
-        try {
-          await Promise.all([
-            loadImageWithFallback(sceneImage, [
-              `${sceneBase}/${sceneName}/img.jpg`,
-            ]),
-            loadImageWithFallback(beforeCompareImage, [
-              `${sceneBase}/${sceneName}/before.jpg`,
-            ]),
-            loadImageWithFallback(afterCompareImage, [
-              `${sceneBase}/${sceneName}/after.jpg`,
-            ]),
-            loadVideoWithFallback(
-              beforeCompareVideo,
-              getVideoCandidates(sceneName, "before"),
-            ),
-            loadVideoWithFallback(
-              afterCompareVideo,
-              getVideoCandidates(sceneName, "after"),
-            ),
-          ]);
-
-          if (token !== activeToken) {
-            return;
-          }
-
-          updateSceneAspectFromImage();
-          beforeCompareVideo.currentTime = 0;
-          afterCompareVideo.currentTime = 0;
-          beforeCompareVideo.play().catch(() => {});
-          afterCompareVideo.play().catch(() => {});
-          setStatus("Ready");
-        } catch (error) {
-          console.error(error);
-          if (token !== activeToken) {
-            return;
-          }
-
-          setStatus("Failed to load scene media");
-        } finally {
-          if (token === activeToken) {
-            sceneSelect.disabled = false;
-          }
-        }
-      }
-
       document.querySelectorAll("[data-empty-link='true']").forEach((link) => {
         const href = (link.getAttribute("href") || "").trim();
         if (!href) {
@@ -3299,25 +2935,6 @@
           link.addEventListener("click", (event) => event.preventDefault());
         }
       });
-
-      SCENES.forEach((sceneName) => {
-        const option = document.createElement("option");
-        option.value = sceneName;
-        option.textContent = sceneName;
-        sceneSelect.appendChild(option);
-      });
-
-      sceneSelect.value = SCENES[0];
-
-      sceneSelect.addEventListener("change", () => {
-        loadScene(sceneSelect.value);
-      });
-
-      attachSplitter(imageCompareStage, imageCompareSplitter);
-      attachSplitter(videoCompareStage, videoCompareSplitter);
-      setStageSplit(imageCompareStage, imageCompareSplitter, 0.5);
-      setStageSplit(videoCompareStage, videoCompareSplitter, 0.5);
-      loadScene(sceneSelect.value);
 
       const SAMPLING_SCENES = [
         {
@@ -3911,6 +3528,86 @@
 
       setupSimRequirementPopups();
 
+      function setupDepthBleedingPopup() {
+        const trigger = document.getElementById("depthBleedingTrigger");
+        const popup = document.getElementById("depthBleedingPopup");
+
+        if (!trigger || !popup) {
+          return;
+        }
+
+        const positionPopup = () => {
+          const margin = 12;
+          const rect = trigger.getBoundingClientRect();
+          const popupWidth = Math.min(420, window.innerWidth - margin * 2);
+          popup.style.width = `${popupWidth}px`;
+
+          let left = rect.left;
+          if (left + popupWidth > window.innerWidth - margin) {
+            left = window.innerWidth - margin - popupWidth;
+          }
+          if (left < margin) {
+            left = margin;
+          }
+          popup.style.left = `${left}px`;
+
+          popup.style.top = `${rect.bottom + 8}px`;
+          const popupRect = popup.getBoundingClientRect();
+          if (popupRect.bottom > window.innerHeight - margin) {
+            const aboveTop = rect.top - popupRect.height - 8;
+            popup.style.top = `${Math.max(margin, aboveTop)}px`;
+          }
+        };
+
+        const closePopup = () => {
+          popup.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+        };
+
+        const openPopup = () => {
+          popup.hidden = false;
+          trigger.setAttribute("aria-expanded", "true");
+          positionPopup();
+        };
+
+        trigger.addEventListener("click", (event) => {
+          event.stopPropagation();
+          if (popup.hidden) {
+            openPopup();
+          } else {
+            closePopup();
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!popup.hidden && !popup.contains(event.target) && event.target !== trigger) {
+            closePopup();
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && !popup.hidden) {
+            closePopup();
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          if (!popup.hidden) {
+            positionPopup();
+          }
+        });
+
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!popup.hidden) {
+              positionPopup();
+            }
+          },
+          true,
+        );
+      }
+
       function setupResultsNotePopup() {
         const trigger = document.getElementById("resultsNoteTrigger");
         const popup = document.getElementById("resultsNotePopup");
@@ -4016,6 +3713,7 @@
       }
 
       setupDelayedLoopVideos(["megascenesVideo", "megadepthxVideo"], 750);
+      setupDepthBleedingPopup();
       setupResultsNotePopup();
 
       function setupSimAnalysisCharts() {
