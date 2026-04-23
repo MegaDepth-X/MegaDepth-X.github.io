@@ -586,6 +586,8 @@
 
       .sim-stage {
         position: relative;
+        width: min(980px, 80%);
+        margin: 0 auto;
         background: var(--panel-tint);
         border-radius: 22px;
         overflow: hidden;
@@ -1763,6 +1765,7 @@
         }
 
         .sim-stage {
+          width: 100%;
           border-radius: 16px;
         }
 
@@ -2390,352 +2393,102 @@
 
       <section class="subsection sim-section">
         <p class="subsection-text sim-intro">
-          We simulate long-tail scene conditions by sampling sparse views from dense SfM reconstructions. 
-          Following the paper, the sampling process is designed to satisfy three requirements: 
-          <span class="sim-req-inline">
-            <button
-              type="button"
-              id="simReqDiversityTrigger"
-              class="sim-req-trigger"
-              data-popup-target="simReqDiversityPopup"
-              aria-expanded="false"
-              aria-controls="simReqDiversityPopup"
-            >
-              viewpoint diversity <span class="sim-req-icon" aria-hidden="true">i</span>
-            </button>
-            <span
-              id="simReqDiversityPopup"
-              class="sim-req-popup"
-              role="dialog"
-              aria-label="Viewpoint diversity note"
-              hidden
-              >The sampled views should cover a wide range of viewing
-              directions, ensuring that emulated scenes span diverse visual
-              perspectives.</span
-            >
-          </span>,
-          <span class="sim-req-inline">
-            <button
-              type="button"
-              id="simReqSparsityTrigger"
-              class="sim-req-trigger"
-              data-popup-target="simReqSparsityPopup"
-              aria-expanded="false"
-              aria-controls="simReqSparsityPopup"
-            >
-              sparsity <span class="sim-req-icon" aria-hidden="true">i</span>
-            </button>
-            <span
-              id="simReqSparsityPopup"
-              class="sim-req-popup"
-              role="dialog"
-              aria-label="Sparsity note"
-              hidden
-              >The selected views should be far enough apart to mimic the wide
-              baselines typical of long-tail scenes, e.g. loosely connected
-              views or views from disconnected scene components, encouraging the
-              model to learn robust geometric priors rather than relying on
-              dense feature matches.</span
-            >
-          </span>, and
-          <span class="sim-req-inline">
-            <button
-              type="button"
-              id="simReqLocalReconsTrigger"
-              class="sim-req-trigger"
-              data-popup-target="simReqLocalReconsPopup"
-              aria-expanded="false"
-              aria-controls="simReqLocalReconsPopup"
-            >
-              local reconstructability <span class="sim-req-icon" aria-hidden="true">i</span>
-            </button>
-            <span
-              id="simReqLocalReconsPopup"
-              class="sim-req-popup"
-              role="dialog"
-              aria-label="Local reconstructability note"
-              hidden
-              >Despite the sparsity, views within each sampled scene component
-              should retain enough covisibility to remain locally
-              reconstructable, since zero-overlap samples within a scene
-              component can lead to unstable training signals and difficult
-              optimization.</span
-            >
-          </span>. 
-          The examples below show sampling procedures for a mini batch of 24 views.
-          <!-- <span class="sim-req-tip">* Click a term to view details.</span> -->
+          We simulate long-tail scene conditions by sampling sparse views from
+          dense SfM reconstructions. We devise a method that divides an
+          image graph into communities, then samples images to achieve broad
+          scene coverage while ensuring minimum connectivity.
         </p>
 
-        <div class="sim-carousel" id="simCarousel">
-          <button
-            id="simPrev"
-            class="sim-nav"
-            type="button"
-            aria-label="Previous slide"
-          >
-            &lt;
-          </button>
+        <p class="subsection-text sim-intro">
+          The panel below shows the greedy view sampling animation.
+          <span class="sim-req-inline">
+            <button
+              type="button"
+              id="simAnimationLegendTrigger"
+              class="sim-req-trigger"
+              data-popup-target="simAnimationLegendPopup"
+              aria-expanded="false"
+              aria-controls="simAnimationLegendPopup"
+            >
+              What's in the animation? <span class="sim-req-icon" aria-hidden="true">i</span>
+            </button>
+            <span
+              id="simAnimationLegendPopup"
+              class="sim-req-popup"
+              role="dialog"
+              aria-label="Animation legend"
+              hidden
+            >
+              <b>What's in the animation:</b>
+              <br />
+              • SfM point clouds;<br />
+              • Camera communities (small faded cameras in different colors represent different communities);<br />
+              • The sampled view at each iteration (highlighted with a red-framed camera);<br />
+              • Covisibilities between sampled camera pairs (black lines);<br />
+              • Faded graph edges representing the Steiner tree (the minimal connectivity subgraph).
+            </span>
+          </span>
+        </p>
 
-          <div class="sim-stage" id="simStage">
-            <article class="sim-slide active" data-slide-index="0">
-              <div class="sim-card">
-                <div class="sim-step-title">
-                  0: Start from the SfM reconstruction.
-                </div>
-                <div class="sim-flow">
-                  <div class="sim-flow-single">
-                    <div class="sim-media" data-share-key="init">
-                      <img
-                        data-image-key="init"
-                        alt="Initial SfM reconstruction"
-                      />
-                      <div class="sim-label">SfM reconstruction</div>
-                    </div>
-                  </div>
-                </div>
+        <div class="sim-stage" id="simStage">
+          <article class="sim-slide active" data-slide-index="0">
+            <div class="sim-card">
+              <div class="sim-step-title">
+                Greedy view sampling animation.
+                <span class="sim-assume"
+                  >Assume 2 partitions with 8 views in each partition.</span
+                >
               </div>
-            </article>
-
-            <article class="sim-slide" data-slide-index="1">
-              <div class="sim-card">
-                <div class="sim-step-title">
-                  1: Identify communities and derive partitions.<span
-                    class="sim-assume"
-                    >Assuming two partitions.</span
-                  >
-                </div>
-                <div class="sim-flow">
-                  <div class="sim-grid-ops">
-                    <div class="sim-cell">
-                      <div class="sim-media" data-share-key="init">
-                        <img data-image-key="init" alt="Initial SfM input" />
-                        <div class="sim-label">SfM reconstruction</div>
-                      </div>
-                    </div>
-                    <div class="sim-arrow">&rarr;</div>
-                    <div class="sim-cell">
-                      <div class="sim-media">
-                        <img
-                          data-image-key="community"
-                          alt="Community estimation"
-                        />
-                        <div class="sim-label">Communities</div>
-                      </div>
-                      <div class="sim-under-note">
-                        Identify communities that represent different viewing
-                        perspectives. Different colors indicate different communities.
-                      </div>
-                    </div>
-
-                    <div class="sim-arrow note">&darr;</div>
-                    <div></div>
-                    <div class="sim-arrow note">&darr;</div>
-
-                    <div class="sim-cell">
-                      <div class="sim-media">
-                        <img
-                          data-image-key="partition"
-                          alt="Partition result"
-                        />
-                        <div class="sim-label">Partitions</div>
-                      </div>
-                      <div class="sim-under-note">
-                        Create N<sub>cc</sub> partitions for N<sub>cc</sub>
-                        sampled connected components (here, N<sub>cc</sub> = 2).
-                      </div>
-                    </div>
-                    <div class="sim-arrow">&rarr;</div>
-                    <div class="sim-cell">
-                      <div class="sim-media" data-share-key="random_samples">
-                        <img
-                          data-image-key="random_samples"
-                          alt="Random terminal samples"
-                        />
-                        <div class="sim-label">Random terminals</div>
-                      </div>
-                      <div class="sim-under-note">
-                        Randomly sample one terminal from each community.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="sim-slide" data-slide-index="2">
-              <div class="sim-card">
-                <div class="sim-step-title">
-                  2: Find a minimal connectivity subgraph that links the
-                  terminals in each partition.
-                </div>
-                <div class="sim-flow">
-                  <div class="sim-flow-pair">
-                    <div class="sim-media" data-share-key="random_samples">
-                      <img
-                        data-image-key="random_samples"
-                        alt="Random terminal samples"
-                      />
-                      <div class="sim-label">Random terminals</div>
-                    </div>
-                    <div class="sim-arrow-stack">
-                      <div class="sim-arrow">&rarr;</div>
-                    </div>
-                    <div class="sim-step-panel">
-                      <div class="sim-media" data-share-key="steiner_tree">
-                        <img
-                          data-image-key="steiner_tree"
-                          alt="Steiner tree subgraph"
-                        />
-                        <div class="sim-label">Steiner subgraph</div>
-                      </div>
-                      <div class="sim-under-note">
-                        Apply a Steiner tree algorithm to obtain a minimal
-                        connectivity subgraph.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="sim-slide" data-slide-index="3">
-              <div class="sim-card">
-                <div class="sim-step-title">
-                  3: Perform greedy view sampling to reach the target number of
-                  views.<span class="sim-assume"
-                    >Assuming 7 iterations per partition (8 sampled nodes per
-                    partition).</span
-                  >
-                </div>
-                <div class="sim-flow">
-                  <div class="sim-flow-pair">
-                    <div class="sim-step-panel">
-                      <div
-                        class="sim-step-toolbar"
-                        style="visibility: hidden"
-                        aria-hidden="true"
+              <div class="sim-flow">
+                <div class="sim-flow-single">
+                  <div class="sim-step-panel">
+                    <div class="sim-step-toolbar">
+                      <button
+                        id="simStepPrev"
+                        class="sim-step-arrow"
+                        type="button"
+                        aria-label="Previous greedy step"
                       >
-                        <button
-                          class="sim-step-arrow"
-                          type="button"
-                          aria-hidden="true"
-                        >
-                          &lt;
-                        </button>
-                        <div class="sim-step-chip" aria-hidden="true">
-                          Greedy step 1
-                        </div>
-                        <button
-                          class="sim-step-arrow"
-                          type="button"
-                          aria-hidden="true"
-                        >
-                          &gt;
-                        </button>
-                        <button
-                          class="sim-step-play"
-                          type="button"
-                          aria-hidden="true"
-                        >
-                          Auto-play
-                        </button>
+                        &lt;
+                      </button>
+                      <div id="simStepBadge" class="sim-step-chip">
+                        Greedy step 1
                       </div>
-                      <div class="sim-media" data-share-key="steiner_tree">
-                        <img
-                          data-image-key="steiner_tree"
-                          alt="Steiner tree input"
-                        />
-                        <div class="sim-label">Steiner subgraph</div>
-                      </div>
+                      <button
+                        id="simStepNext"
+                        class="sim-step-arrow"
+                        type="button"
+                        aria-label="Next greedy step"
+                      >
+                        &gt;
+                      </button>
+                      <button
+                        id="simPlayBtn"
+                        class="sim-step-play"
+                        type="button"
+                      >
+                        Auto-play
+                      </button>
                     </div>
-                    <div class="sim-arrow-stack">
-                      <div class="sim-arrow">&rarr;</div>
+                    <div class="sim-media sim-step-media">
+                      <img data-image-key="step" alt="Greedy view sampling step" />
+                      <div class="sim-label">Current step</div>
                     </div>
-                    <div class="sim-step-panel">
-                      <div class="sim-step-toolbar">
-                        <button
-                          id="simStepPrev"
-                          class="sim-step-arrow"
-                          type="button"
-                          aria-label="Previous greedy step"
-                        >
-                          &lt;
-                        </button>
-                        <div id="simStepBadge" class="sim-step-chip">
-                          Greedy step 1
-                        </div>
-                        <button
-                          id="simStepNext"
-                          class="sim-step-arrow"
-                          type="button"
-                          aria-label="Next greedy step"
-                        >
-                          &gt;
-                        </button>
-                        <button
-                          id="simPlayBtn"
-                          class="sim-step-play"
-                          type="button"
-                        >
-                          Auto-play
-                        </button>
-                      </div>
-                      <div class="sim-media sim-step-media">
-                        <img data-image-key="step" alt="Greedy sampling step" />
-                        <div class="sim-label">Current step</div>
-                      </div>
-                      <div class="sim-under-note">
-                        Run greedy view sampling.
-                      </div>
+                    <div class="sim-under-note">
+                      This animation visualizes iterative greedy view sampling.
                     </div>
                   </div>
                 </div>
               </div>
-            </article>
-
-            <article class="sim-slide" data-slide-index="4">
-              <div class="sim-card">
-                <div class="sim-step-title">
-                  4: Randomly sample within each neighborhood to reach the
-                  target number of views.<span class="sim-assume"
-                    >Assuming N = 24.</span
-                  >
-                </div>
-                <div class="sim-flow">
-                  <div class="sim-flow-single">
-                    <div class="sim-media">
-                      <img
-                        data-image-key="final"
-                        alt="Final sampled view set"
-                      />
-                      <div class="sim-label">Final sampled set</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <div class="sim-stage-footer">
-              <label>
-                Scene
-                <select id="simSceneSelect"></select>
-              </label>
-              <div
-                id="simDots"
-                class="sim-dots"
-                aria-label="Slide indicators"
-              ></div>
             </div>
-          </div>
+          </article>
 
-          <button
-            id="simNext"
-            class="sim-nav"
-            type="button"
-            aria-label="Next slide"
-          >
-            &gt;
-          </button>
+          <div class="sim-stage-footer">
+            <label>
+              Scene
+              <select id="simSceneSelect"></select>
+            </label>
+          </div>
         </div>
 
       </section>
@@ -2952,17 +2705,12 @@
       ];
       const samplingBase = "material/sampling";
 
-      const simSlides = Array.from(document.querySelectorAll(".sim-slide"));
-      const simPrev = document.getElementById("simPrev");
-      const simNext = document.getElementById("simNext");
       const simSceneSelect = document.getElementById("simSceneSelect");
       const simStepPrev = document.getElementById("simStepPrev");
       const simStepNext = document.getElementById("simStepNext");
       const simPlayBtn = document.getElementById("simPlayBtn");
-      const simDots = document.getElementById("simDots");
       const simStepBadge = document.getElementById("simStepBadge");
 
-      let simCurrentSlide = 0;
       let simStep = 1;
       let simAutoPlayTimer = null;
 
@@ -2980,11 +2728,13 @@
           simAutoPlayTimer = null;
         }
 
-        simPlayBtn.textContent = "Auto-play";
+        if (simPlayBtn) {
+          simPlayBtn.textContent = "Auto-play";
+        }
       }
 
       function startStepAutoplay() {
-        if (simAutoPlayTimer) {
+        if (simAutoPlayTimer || !simPlayBtn) {
           return;
         }
 
@@ -2995,114 +2745,19 @@
         }, 850);
       }
 
-      function updateStepControls() {
-        if (simCurrentSlide !== 3) {
-          stopStepAutoplay();
-          return;
-        }
-
-        // Entering slide 3 should always restart from frame 1 and auto-play.
-        simStep = 1;
-        updateSamplingImages();
-        stopStepAutoplay();
-        startStepAutoplay();
-      }
-
-      function updateDotState() {
-        Array.from(simDots.querySelectorAll(".sim-dot")).forEach(
-          (dot, index) => {
-            dot.classList.toggle("active", index === simCurrentSlide);
-          },
-        );
-      }
-
-      function getTransitionShareKey(fromIndex, toIndex) {
-        const key = `${fromIndex}-${toIndex}`;
-        const transitionMap = {
-          "0-1": "init",
-          "1-0": "init",
-          "1-2": "random_samples",
-          "2-1": "random_samples",
-          "2-3": "steiner_tree",
-          "3-2": "steiner_tree",
-        };
-
-        return transitionMap[key] || null;
-      }
-
-      function animateSharedImageTransition(fromSlide, toSlide, targetKey) {
-        if (!targetKey) {
-          return;
-        }
-
-        const fromShared = Array.from(
-          fromSlide.querySelectorAll("[data-share-key]"),
-        );
-        const toShared = Array.from(
-          toSlide.querySelectorAll("[data-share-key]"),
-        );
-        if (!fromShared.length || !toShared.length) {
-          return;
-        }
-
-        const fromByKey = new Map(
-          fromShared.map((node) => [node.getAttribute("data-share-key"), node]),
-        );
-        const pairs = toShared
-          .map((node) => {
-            const key = node.getAttribute("data-share-key");
-            return {
-              key,
-              fromNode: fromByKey.get(key),
-              toNode: node,
-            };
-          })
-          .filter(
-            (item) => item.key === targetKey && item.fromNode && item.toNode,
-          );
-
-        pairs.forEach(({ fromNode, toNode }) => {
-          const fromImg = fromNode.querySelector("img");
-          const toImg = toNode.querySelector("img");
-          if (!fromImg || !toImg || !fromImg.currentSrc) {
-            return;
-          }
-
-          toNode.classList.add("shared-highlight");
-          window.setTimeout(() => {
-            toNode.classList.remove("shared-highlight");
-          }, 520);
-        });
-      }
-
-      function showSlide(targetIndex) {
-        const fromIndex = simCurrentSlide;
-        const nextIndex =
-          ((targetIndex % simSlides.length) + simSlides.length) %
-          simSlides.length;
-        if (nextIndex === simCurrentSlide) {
-          return;
-        }
-
-        const fromSlide = simSlides[simCurrentSlide];
-        const toSlide = simSlides[nextIndex];
-        toSlide.classList.add("active");
-        const transitionKey = getTransitionShareKey(fromIndex, nextIndex);
-        animateSharedImageTransition(fromSlide, toSlide, transitionKey);
-        fromSlide.classList.remove("active");
-        simCurrentSlide = nextIndex;
-
-        updateStepControls();
-        updateDotState();
-      }
-
       async function updateSamplingImages() {
+        if (!simSceneSelect) {
+          return;
+        }
+
         const sceneName = simSceneSelect.value;
         const targets = Array.from(
           document.querySelectorAll("[data-image-key]"),
         );
 
-        simStepBadge.textContent = `Greedy step ${simStep}`;
+        if (simStepBadge) {
+          simStepBadge.textContent = `Greedy step ${simStep}`;
+        }
 
         await Promise.all(
           targets.map(
@@ -3127,71 +2782,48 @@
         );
       }
 
-      SAMPLING_SCENES.forEach((scene) => {
-        const option = document.createElement("option");
-        option.value = scene.value;
-        option.textContent = scene.label;
-        simSceneSelect.appendChild(option);
-      });
+      if (simSceneSelect) {
+        SAMPLING_SCENES.forEach((scene) => {
+          const option = document.createElement("option");
+          option.value = scene.value;
+          option.textContent = scene.label;
+          simSceneSelect.appendChild(option);
+        });
 
-      simSlides.forEach((_, index) => {
-        const dot = document.createElement("button");
-        dot.className = "sim-dot";
-        dot.type = "button";
-        dot.setAttribute("aria-label", `Go to slide ${index + 1}`);
-        dot.addEventListener("click", () => showSlide(index));
-        simDots.appendChild(dot);
-      });
+        simSceneSelect.addEventListener("change", () => {
+          updateSamplingImages();
+        });
 
-      simPrev.addEventListener("click", () => showSlide(simCurrentSlide - 1));
-      simNext.addEventListener("click", () => showSlide(simCurrentSlide + 1));
+        simSceneSelect.value = SAMPLING_SCENES[0].value;
+      }
 
-      simSceneSelect.addEventListener("change", () => {
-        updateSamplingImages();
-      });
+      if (simStepPrev) {
+        simStepPrev.addEventListener("click", () => {
+          simStep = ((simStep + 6) % 8) + 1;
+          updateSamplingImages();
+        });
+      }
 
-      simStepPrev.addEventListener("click", () => {
-        simStep = ((simStep + 6) % 8) + 1;
-        updateSamplingImages();
-      });
+      if (simStepNext) {
+        simStepNext.addEventListener("click", () => {
+          simStep = (simStep % 8) + 1;
+          updateSamplingImages();
+        });
+      }
 
-      simStepNext.addEventListener("click", () => {
-        simStep = (simStep % 8) + 1;
-        updateSamplingImages();
-      });
+      if (simPlayBtn) {
+        simPlayBtn.addEventListener("click", () => {
+          if (simAutoPlayTimer) {
+            stopStepAutoplay();
+            return;
+          }
 
-      simPlayBtn.addEventListener("click", () => {
-        if (simAutoPlayTimer) {
-          stopStepAutoplay();
-          return;
-        }
+          startStepAutoplay();
+        });
+      }
 
-        startStepAutoplay();
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (
-          event.target &&
-          (event.target.tagName === "INPUT" ||
-            event.target.tagName === "TEXTAREA" ||
-            event.target.tagName === "SELECT")
-        ) {
-          return;
-        }
-
-        if (event.key === "ArrowLeft") {
-          showSlide(simCurrentSlide - 1);
-        }
-
-        if (event.key === "ArrowRight") {
-          showSlide(simCurrentSlide + 1);
-        }
-      });
-
-      simSceneSelect.value = SAMPLING_SCENES[0].value;
-      updateDotState();
-      updateStepControls();
       updateSamplingImages();
+      startStepAutoplay();
 
       const RESULTS_PER_PAGE = 2;
       const RESULTS_SCENES = [
