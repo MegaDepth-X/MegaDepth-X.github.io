@@ -483,6 +483,20 @@
         margin-bottom: 14px;
       }
 
+      .sim-req-list {
+        width: min(920px, 100%);
+        margin: 0 auto 12px;
+        padding-left: 22px;
+        text-align: left;
+        color: #3f3f3f;
+        font-size: clamp(0.98rem, 1.05vw, 1.06rem);
+        line-height: 1.64;
+      }
+
+      .sim-req-list li + li {
+        margin-top: 6px;
+      }
+
       .sim-req-inline {
         display: inline-flex;
         align-items: center;
@@ -2393,14 +2407,19 @@
 
       <section class="subsection sim-section">
         <p class="subsection-text sim-intro">
-          We simulate long-tail scene conditions by sampling sparse views from
-          dense SfM reconstructions. We devise a method that divides an
-          image graph into communities, then samples images to achieve broad
-          scene coverage while ensuring minimum connectivity.
+          Reliable long-tail supervision is scarce, so direct training in this
+          regime is limited. We therefore simulate long-tail training batches
+          by sampling sparse views from dense SfM reconstructions. Our sampling
+          strategy aims to select views that span diverse viewpoints, maintain
+          sparse overlap to emulate wide-baseline long-tail conditions, and
+          still preserve sufficient covisibility within each scene component.
         </p>
 
         <p class="subsection-text sim-intro">
-          The panel below shows the greedy view sampling animation.
+          The panel below visualizes this sampling process with iterative
+          greedy view sampling. For each training batch, we sample two
+          disconnected view groups from a single scene graph to simulate two
+          disjoint scene components, with eight views in each group.
           <span class="sim-req-inline">
             <button
               type="button"
@@ -2422,7 +2441,7 @@
               <b>What's in the animation:</b>
               <br />
               • SfM point clouds;<br />
-              • Camera communities (small faded cameras in different colors represent different communities);<br />
+              • Camera communities (each community is a camera-view group with dense internal covisibility; small faded cameras in different colors indicate different communities);<br />
               • The sampled view at each iteration (highlighted with a red-framed camera);<br />
               • Covisibilities between sampled camera pairs (black lines);<br />
               • Faded graph edges representing the Steiner tree (the minimal connectivity subgraph).
@@ -2433,12 +2452,6 @@
         <div class="sim-stage" id="simStage">
           <article class="sim-slide active" data-slide-index="0">
             <div class="sim-card">
-              <div class="sim-step-title">
-                Greedy view sampling animation.
-                <span class="sim-assume"
-                  >Assume 2 partitions with 8 views in each partition.</span
-                >
-              </div>
               <div class="sim-flow">
                 <div class="sim-flow-single">
                   <div class="sim-step-panel">
